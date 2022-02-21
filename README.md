@@ -16,7 +16,7 @@
 ## Instalação
 
 ```shell
-pip install brdata
+pip install br-data
 ```
 
 ## Utilização
