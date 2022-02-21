@@ -42,7 +42,7 @@ To format the code, you can use the command:
 make formatting
 ```
 
-This will run the [isort](https://github.com/PyCQA/isort)  and [black](https://github.com/psf/black) commands.
+This will run the [isort](https://github.com/PyCQA/isort) and [black](https://github.com/psf/black) commands.
 
 ### Releasing a new version
 
