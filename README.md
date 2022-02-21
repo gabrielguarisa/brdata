@@ -54,10 +54,6 @@ Importando módulo:
 from brdata import cvm
 ```
 
-"GeralFCA",
-"ValorMobiliarioFCA",
-"DistribuicaoCapitalFRE",
-
 Baixando os arquivos de dados:
 
 ```python
