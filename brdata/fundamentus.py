@@ -19,7 +19,7 @@ def _get_new_cookies(count: int = 0, max_retries: int = 5, timeout: int = 5) -> 
         req = requests.get(
             "http://fundamentus.com.br/index.php",
             headers={"User-Agent": new_user_agent()},
-            timeout=timeout
+            timeout=timeout,
         )
 
         return req.cookies["PHPSESSID"]
@@ -41,7 +41,7 @@ def _set_cookies_balanco_historico(papel: str, cookie: str, timeout: int = 5):
         requests.get(
             f"http://fundamentus.com.br/balancos.php?papel={papel}&tipo=1",
             headers=headers,
-            timeout=timeout
+            timeout=timeout,
         )
     except Exception:
         raise Exception("Error in requests [Set cookies]")

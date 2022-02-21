@@ -46,7 +46,7 @@ INVALID_SYMBOLS = [
     "BBM",
     "022055",
     "BKBR",
-    "B3"
+    "B3",
 ]
 
 

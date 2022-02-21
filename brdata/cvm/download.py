@@ -9,13 +9,14 @@ from zipfile import ZipFile
 import pandas as pd
 from cachier import cachier
 
+from brdata.utils import CACHE_DIR, get_response, remove_empty_str
+
 from ._utils import (
     METADATA_EXTENSIONS,
     get_data_urls,
     get_metadata_urls,
     get_table_links,
 )
-from brdata.utils import CACHE_DIR, get_response, remove_empty_str
 
 
 def convert_metadata_to_dataframe(filename: str) -> pd.DataFrame:
@@ -76,9 +77,7 @@ def download_metadata(folder: str, to_dataframe: bool = True) -> List[str]:
 
 
 @cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
-def download_data(
-    folder: str, names: Union[str, List[str]] = None
-) -> List[str]:
+def download_data(folder: str, names: Union[str, List[str]] = None) -> List[str]:
     """Baixa os arquivos de dados da cvm"""
     all_filenames = []
     urls = get_data_urls()

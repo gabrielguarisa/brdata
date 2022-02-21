@@ -3,13 +3,112 @@
 <div align="center">
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/gabrielguarisa/brdata/blob/master/.pre-commit-config.yaml)
 [![Semantic Versions](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--versions-e10079.svg)](https://github.com/gabrielguarisa/brdata/releases)
 [![License](https://img.shields.io/github/license/gabrielguarisa/brdata)](https://github.com/gabrielguarisa/brdata/blob/master/LICENSE)
 
 Fontes de dados do mercado financeiro brasileiro
 
 </div>
+
+## Instalação
+
+```shell
+pip install brdata
+```
+
+## Utilização
+
+### XPI
+
+Coletando dados da análise da XPI para uma determinada ação:
+
+```python
+from brdata import xpi
+xpi.analise("cyre3")
+```
+
+### Fundamentus
+
+Coletando tabela do resultado da busca no Fundamentus (equivalenta a página https://www.fundamentus.com.br/resultado.php):
+
+```python
+from brdata import fundamentus
+fundamentus.resultados()
+```
+
+Balanços históricos de uma determinada ação:
+
+```python
+balanco, demonstrativo = fundamentus.balanco_historico("mglu3")
+```
+
+### CVM
+
+
+Importando módulo:
+
+```python
+from brdata import cvm
+```
+
+"GeralFCA",
+"ValorMobiliarioFCA",
+"DistribuicaoCapitalFRE",
+
+Baixando os arquivos de dados:
+
+```python
+cvm.download_data("data")
+```
+
+Baixando os arquivos de metadados:
+
+```python
+cvm.download_metadata("data")
+```
+
+#### Formulário Cadastral
+
+Usando dados do [formulário cadastral](https://dados.gov.br/dataset/cia_aberta-doc-fca):
+
+```python
+g_fca = cvm.GeralFCA("data")
+vm_fca = cvm.ValorMobiliarioFCA("data")
+```
+
+Consultando dados para uma determinada companhia:
+
+```python
+g_fca.get_cia(cvm_code=14460)
+# OU
+g_fca.get_cia(cnpj="47.960.950/0001-21")
+```
+
+Número de companhias cadastradas por ano:
+
+```python
+g_fca.get_num_cias_per_year()
+```
+
+Quantidade de empresas cadastradas por setor em cada ano:
+
+```python
+g_fca.get_sectors_per_year()
+```
+
+#### Formulário de Referência
+
+Usando dados do [formulário de referência](https://dados.gov.br/dataset/cia_aberta-doc-fre):
+
+```python
+cvm.DistribuicaoCapitalFRE("data")
+```
+
+Consultando dados para uma determinada companhia:
+
+```python
+d_fre.get_cia("47.960.950/0001-21")
+```
 
 ## Development
 ### Setting up a development environment
