@@ -1,11 +1,16 @@
 [tool.poetry]
-name = "br-data"
+name = "brasil-data"
 packages = [
     {include = "brdata"}
 ]
-version = "0.1.2"
+version = "0.2.0"
 description = "Fontes de dados do mercado financeiro brasileiro"
 authors = ["Gabriel Guarisa <gabrielguarisa@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/gabrielguarisa/brdata"
+homepage = "https://github.com/gabrielguarisa/brdata"
+keywords = ["data", "dados", "brasil", "br", "brazil", "finance", "financeiro", "mercado"]
 
 [tool.poetry.dependencies]
 python = ">= 3.7.12, < 3.11"

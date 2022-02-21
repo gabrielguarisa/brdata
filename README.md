@@ -16,7 +16,7 @@
 ## Instalação
 
 ```shell
-pip install br-data
+pip install brasil-data
 ```
 
 ## Utilização
