@@ -6,7 +6,7 @@ if sys.version_info >= (3, 8):
 else:
     import importlib_metadata  # pragma: no cover
 
-from . import xpi
+from . import xpi, fundamentus
 
 def get_version() -> str:
     try:
@@ -16,4 +16,4 @@ def get_version() -> str:
 
 
 __version__: str = get_version()
-__all__: list = ["__version__", "xpi"]
+__all__: list = ["__version__", "xpi", "fundamentus"]
