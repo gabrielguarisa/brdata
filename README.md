@@ -109,7 +109,6 @@ Consultando dados para uma determinada companhia:
 d_fre.get_cia("47.960.950/0001-21")
 ```
 
-
 ### B3
 
 Importando módulo:

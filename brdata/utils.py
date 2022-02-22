@@ -29,7 +29,10 @@ def get_response(
     while True:
         try:
             response = requests.get(
-                url, headers={"User-Agent": new_user_agent()}, timeout=timeout, verify=verify
+                url,
+                headers={"User-Agent": new_user_agent()},
+                timeout=timeout,
+                verify=verify,
             )
             response.raise_for_status()
             return response
