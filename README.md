@@ -108,3 +108,24 @@ Consultando dados para uma determinada companhia:
 ```python
 d_fre.get_cia("47.960.950/0001-21")
 ```
+
+
+### B3
+
+Importando módulo:
+
+```python
+from brdata import b3
+```
+
+Índices disponíveis:
+
+```python
+b3.indices()
+```
+
+Coletando composição de um índice:
+
+```python
+b3.portfolio("ibov")
+```

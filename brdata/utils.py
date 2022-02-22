@@ -16,7 +16,7 @@ def new_user_agent() -> str:
 
 
 def get_response(
-    url: str, max_retries: int = 5, timeout: int = 10
+    url: str, max_retries: int = 5, timeout: int = 10, verify: bool = True
 ) -> requests.Response:
     """Retorna uma resposta de uma requisição HTTP.
 
@@ -29,7 +29,7 @@ def get_response(
     while True:
         try:
             response = requests.get(
-                url, headers={"User-Agent": new_user_agent()}, timeout=timeout
+                url, headers={"User-Agent": new_user_agent()}, timeout=timeout, verify=verify
             )
             response.raise_for_status()
             return response
