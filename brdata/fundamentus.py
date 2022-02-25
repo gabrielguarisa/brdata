@@ -5,12 +5,14 @@ import io
 import os
 import zipfile
 
+import numpy as np
 import pandas as pd
 import requests
 import xlrd
+from bs4 import BeautifulSoup
 from cachier import cachier
 
-from .utils import CACHE_DIR, new_user_agent
+from brdata.utils import CACHE_DIR, get_response, new_user_agent
 
 
 def _get_new_cookies(count: int = 0, max_retries: int = 5, timeout: int = 5) -> str:
@@ -130,3 +132,79 @@ def resultados(fii: bool = False) -> pd.DataFrame:
         df[c] = pd.to_numeric(df[c]) / 100.00
 
     return df
+
+
+def _get_detalhes_tables(symbol):
+    url = f"http://www.fundamentus.com.br/detalhes.php?papel={symbol.lower()}"
+    r = get_response(url)
+
+    soup = BeautifulSoup(r.content, "html.parser", from_encoding="utf-8")
+    tables = soup.findAll("table")
+
+    return pd.read_html(str(tables).replace("?", ""), decimal=",", thousands=".")
+
+
+def _table_without_header(table):
+    data = {}
+
+    for row in table.iterrows():
+        data[row[1][0]] = row[1][1]
+        data[row[1][2]] = row[1][3]
+
+    data = pd.Series(data)
+
+    for col in ["Últ balanço processado", "Data últ cot"]:
+        if col in data:
+            data[col] = pd.to_datetime(data[col])
+
+    data.replace("-", np.nan, inplace=True)
+    return data
+
+
+def _table_with_single_header(table):
+    cols = table.iloc[0]
+    data = {col: {} for col in cols.unique()}
+
+    for row in table.iloc[1:].iterrows():
+        for i in range(0, len(cols), 2):
+            value = row[1][i + 1]
+            if isinstance(value, str) and value.endswith("%"):
+                value = value.replace("%", "")
+                value = value.replace(",", ".")
+                value = float(value) / 100
+
+            data[cols[i]][row[1][i]] = value
+
+    return {col: pd.Series(data[col]).dropna().replace("-", np.nan) for col in data}
+
+
+def _table_with_double_header(table):
+    cols = table.iloc[0]
+    data = {}
+
+    for col in cols.unique():
+        valid_table = table.iloc[1:, [i for i, c in enumerate(cols) if c == col]]
+        data[col] = pd.DataFrame(_table_with_single_header(valid_table))
+
+    return data
+
+
+@cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
+def detalhes(symbol):
+    tables = _get_detalhes_tables(symbol)
+
+    results = {}
+
+    results["Metadata"] = pd.concat(
+        [_table_without_header(tables[0]), _table_without_header(tables[1])], axis=0
+    )
+
+    results = {
+        **results,
+        **_table_with_single_header(tables[2]),
+        **_table_with_single_header(tables[3]),
+    }
+
+    results = {**results, **_table_with_double_header(tables[4])}
+
+    return results

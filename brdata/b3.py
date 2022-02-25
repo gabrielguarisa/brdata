@@ -5,12 +5,12 @@ import datetime
 import json
 
 import pandas as pd
+import urllib3
 from cachier import cachier
 
 from brdata.utils import get_response
 
 from .utils import CACHE_DIR
-import urllib3
 
 urllib3.disable_warnings()
 
