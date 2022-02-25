@@ -9,4 +9,4 @@ formatting:
 
 .PHONY: tests
 tests:
-	poetry run pytest --cov-report term-missing --cov=brdata tests/
+	poetry run pytest

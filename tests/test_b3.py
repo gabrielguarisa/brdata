@@ -24,6 +24,7 @@ def test_b3_indices_list():
 
 @pytest.mark.parametrize("index", b3.INDICES.keys())
 def test_b3_portfolio(index: str):
+    b3.portfolio.clear_cache()
     result = b3.portfolio(index)
 
     assert isinstance(result, pd.DataFrame)

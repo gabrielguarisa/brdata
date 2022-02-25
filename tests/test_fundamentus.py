@@ -4,6 +4,7 @@ from brdata import fundamentus
 
 
 def test_fundamentus_resultados():
+    fundamentus.resultados.clear_cache()
     result = fundamentus.resultados()
 
     assert isinstance(result, pd.DataFrame)
@@ -12,6 +13,7 @@ def test_fundamentus_resultados():
 
 
 def test_fundamentus_balanco_historico():
+    fundamentus.balanco_historico.clear_cache()
     balanco, demonstrativo = fundamentus.balanco_historico("mglu3")
 
     assert isinstance(balanco, pd.DataFrame)
@@ -22,3 +24,20 @@ def test_fundamentus_balanco_historico():
 
     assert len(balanco.columns) > 1
     assert len(demonstrativo.columns) > 1
+
+
+def test_fundamentus_detalhes():
+    fundamentus.detalhes.clear_cache()
+    detalhes = fundamentus.detalhes("bbas3")
+
+    assert isinstance(detalhes, dict)
+    assert len(detalhes) > 1
+
+    for col in [
+        "Metadata",
+        "Oscilações",
+        "Indicadores fundamentalistas",
+        "Dados Balanço Patrimonial",
+        "Dados demonstrativos de resultados",
+    ]:
+        assert col in detalhes

@@ -3,7 +3,7 @@ name = "brasil-data"
 packages = [
     {include = "brdata"}
 ]
-version = "0.3.0"
+version = "0.4.0"
 description = "Fontes de dados do mercado financeiro brasileiro"
 authors = ["Gabriel Guarisa <gabrielguarisa@gmail.com>"]
 license = "MIT"
@@ -23,6 +23,7 @@ appdirs = "^1.4.4"
 requests = "^2.23.0"
 xlrd = "^2.0.1"
 lxml = "^4.6.4"
+html5lib = "^1.1"
 
 [tool.poetry.dev-dependencies]
 black = { version = "^21.7b0", allow-prereleases = true }
@@ -78,6 +79,8 @@ multi_line_output = 3
 indent = 4
 color_output = true
 
+[tool.pytest.ini_options]
+addopts = "-p no:warnings --cov-report term-missing --cov=brdata"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
