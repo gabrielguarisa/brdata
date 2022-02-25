@@ -45,6 +45,12 @@ Balanços históricos de uma determinada ação:
 balanco, demonstrativo = fundamentus.balanco_historico("mglu3")
 ```
 
+Detalhes de uma ação:
+
+```python
+fundamentus.detalhes("mglu3")
+```
+
 ### CVM
 
 
