@@ -10,6 +10,9 @@ from cachier import cachier
 from brdata.utils import get_response
 
 from .utils import CACHE_DIR
+import urllib3
+
+urllib3.disable_warnings()
 
 INDICES = {
     "IBOV": "Índice Bovespa - É o principal indicador de desempenho das ações negociadas na B3 e reúne as empresas mais importantes do mercado de capitais brasileiro",
