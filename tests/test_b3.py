@@ -30,3 +30,17 @@ def test_b3_portfolio(index: str):
     assert isinstance(result, pd.DataFrame)
     assert len(result.columns) > 0
     assert len(result) > 0
+
+
+def test_b3_portfolio_invalid_index():
+    with pytest.raises(ValueError):
+        b3.portfolio("INVALID")
+
+
+def test_b3_all_companies():
+    b3.all_companies.clear_cache()
+    result = b3.all_companies()
+
+    assert isinstance(result, pd.DataFrame)
+    assert len(result.columns) > 0
+    assert len(result) > 0

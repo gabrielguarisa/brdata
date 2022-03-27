@@ -34,6 +34,8 @@ INDICES = {
     "IVBX": "Índice Valor empresas bem conceituadas pelos investidores.",
 }
 
+BASE_API_URL = "https://sistemaswebb3-listados.b3.com.br"
+
 
 def indices(description: bool = True) -> Dict[str, str]:
     if description:
@@ -42,23 +44,12 @@ def indices(description: bool = True) -> Dict[str, str]:
     return list(INDICES.keys())
 
 
-def _get_portfolio_data(
-    indice: str, segment: bool = False, page_size: int = 100, page_number: int = 1
-) -> Dict[str, Any]:
-    indice = indice.upper()
-    if indice not in indices(False):
-        raise ValueError(f"{indice} is not a valid indice")
+def _payload_to_base64(payload: Dict[str, Any]) -> str:
+    return base64.b64encode(str(json.dumps(payload)).encode()).decode()
 
-    payload = {
-        "language": "en-us",
-        "pageNumber": page_number,
-        "pageSize": page_size,
-        "index": indice,
-        "segment": "2" if segment else "1",
-    }
-    url = "https://sistemaswebb3-listados.b3.com.br/indexProxy/indexCall/GetPortfolioDay/{}".format(
-        base64.b64encode(str(json.dumps(payload)).encode()).decode()
-    )
+
+def _get_api_data(path_url: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+    url = "{}{}{}".format(BASE_API_URL, path_url, _payload_to_base64(payload))
 
     return get_response(url, verify=False).json()
 
@@ -66,12 +57,41 @@ def _get_portfolio_data(
 @cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
 def portfolio(indice: str, segment: bool = True) -> pd.DataFrame:
     """Retorna a composição do portfólio do índice."""
-    data = _get_portfolio_data(indice, segment)
-    data = _get_portfolio_data(indice, segment, page_size=data["page"]["totalRecords"])
+    indice = indice.upper()
+    if indice not in indices(False):
+        raise ValueError(f"{indice} is not a valid indice")
+
+    payload = {
+        "language": "en-us",
+        "pageNumber": 1,
+        "pageSize": 100,
+        "index": indice,
+        "segment": "2" if segment else "1",
+    }
+    data = _get_api_data("/indexProxy/indexCall/GetPortfolioDay/", payload)
+    payload["pageSize"] = data["page"]["totalRecords"]
+    data = _get_api_data("/indexProxy/indexCall/GetPortfolioDay/", payload)
 
     df = pd.DataFrame(data["results"])
 
     if "theoricalQty" in df.columns:
         df["theoricalQty"] = df["theoricalQty"].str.replace(",", "").astype(float)
+
+    return df
+
+
+@cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
+def all_companies() -> pd.DataFrame:
+    """Retorna a composição do portfólio do índice."""
+    payload = {"language": "en-us", "pageNumber": 1, "pageSize": 100}
+    data = _get_api_data(
+        "/listedCompaniesProxy/CompanyCall/GetInitialCompanies/", payload
+    )
+    payload["pageSize"] = data["page"]["totalRecords"]
+    data = _get_api_data(
+        "/listedCompaniesProxy/CompanyCall/GetInitialCompanies/", payload
+    )
+
+    df = pd.DataFrame(data["results"])
 
     return df
