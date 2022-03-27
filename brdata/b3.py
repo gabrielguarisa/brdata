@@ -82,7 +82,7 @@ def portfolio(indice: str, segment: bool = True) -> pd.DataFrame:
 
 @cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
 def all_companies() -> pd.DataFrame:
-    """Retorna todas as informações listadas na B3."""
+    """Retorna todas as empresas listadas na B3."""
     payload = {"language": "en-us", "pageNumber": 1, "pageSize": 100}
     data = _get_api_data(
         "/listedCompaniesProxy/CompanyCall/GetInitialCompanies/", payload
@@ -91,6 +91,19 @@ def all_companies() -> pd.DataFrame:
     data = _get_api_data(
         "/listedCompaniesProxy/CompanyCall/GetInitialCompanies/", payload
     )
+
+    df = pd.DataFrame(data["results"])
+
+    return df
+
+
+@cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
+def all_bdrs() -> pd.DataFrame:
+    """Retorna todas as BDRs listadas na B3."""
+    payload = {"language": "en-us", "pageNumber": 1, "pageSize": 100}
+    data = _get_api_data("/listedCompaniesProxy/CompanyCall/GetCompaniesBDR/", payload)
+    payload["pageSize"] = data["page"]["totalRecords"]
+    data = _get_api_data("/listedCompaniesProxy/CompanyCall/GetCompaniesBDR/", payload)
 
     df = pd.DataFrame(data["results"])
 

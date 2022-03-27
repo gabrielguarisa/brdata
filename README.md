@@ -134,3 +134,21 @@ Coletando composição de um índice:
 ```python
 b3.portfolio("ibov")
 ```
+
+Listando empresas disponíveis na B3:
+
+```python
+b3.all_companies()
+```
+
+Listando todas as BDRs disponíveis:
+
+```python
+b3.all_bdrs()
+```
+
+Detalhamento de uma empresa:
+
+```python
+b3.company_detail(cvm_code="25135")
+```

@@ -46,6 +46,15 @@ def test_b3_all_companies():
     assert len(result) > 0
 
 
+def test_b3_all_bdrs():
+    b3.all_bdrs.clear_cache()
+    result = b3.all_bdrs()
+
+    assert isinstance(result, pd.DataFrame)
+    assert len(result.columns) > 0
+    assert len(result) > 0
+
+
 def test_b3_company_detail():
     b3.company_detail.clear_cache()
     result = b3.company_detail("25135")
