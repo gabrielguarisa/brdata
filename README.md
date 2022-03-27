@@ -152,3 +152,23 @@ Detalhamento de uma empresa:
 ```python
 b3.company_detail(cvm_code="25135")
 ```
+
+### Valor Econômico
+
+Importando módulo:
+
+```python
+from brdata import valor
+```
+
+Portfólios das instituições financeiras:
+
+```python
+valor.portfolios(2, 2022)
+```
+
+Carteira Valor:
+
+```python
+valor.carteira_valor(2, 2022)
+```
