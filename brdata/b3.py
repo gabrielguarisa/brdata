@@ -82,7 +82,7 @@ def portfolio(indice: str, segment: bool = True) -> pd.DataFrame:
 
 @cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
 def all_companies() -> pd.DataFrame:
-    """Retorna a composição do portfólio do índice."""
+    """Retorna todas as informações listadas na B3."""
     payload = {"language": "en-us", "pageNumber": 1, "pageSize": 100}
     data = _get_api_data(
         "/listedCompaniesProxy/CompanyCall/GetInitialCompanies/", payload
@@ -95,3 +95,12 @@ def all_companies() -> pd.DataFrame:
     df = pd.DataFrame(data["results"])
 
     return df
+
+
+@cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
+def company_detail(cvm_code: str) -> pd.Series:
+    """Retorna as informações detalhadas de uma empresa."""
+    payload = {"language": "en-us", "codeCVM": cvm_code}
+    data = _get_api_data("/listedCompaniesProxy/CompanyCall/GetDetail/", payload)
+
+    return pd.Series(data)
