@@ -3,6 +3,9 @@ import shutil
 import requests
 from appdirs import user_cache_dir
 from random_user_agent.user_agent import UserAgent
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 __user_agent_rotator = UserAgent()
 

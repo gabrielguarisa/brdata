@@ -110,7 +110,7 @@ def all_bdrs() -> pd.DataFrame:
     return df
 
 
-@cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
+@cachier(stale_after=datetime.timedelta(days=7), cache_dir=CACHE_DIR)
 def company_detail(cvm_code: str) -> pd.Series:
     """Retorna as informações detalhadas de uma empresa."""
     payload = {"language": "en-us", "codeCVM": cvm_code}
