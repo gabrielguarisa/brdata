@@ -26,10 +26,10 @@ lxml = "^4.6.4"
 html5lib = "^1.1"
 
 [tool.poetry.dev-dependencies]
-black = { version = "^21.7b0", allow-prereleases = true }
-isort = { extras = ["colors"], version = "^5.9.3" }
 pytest = "^6.2.4"
 pytest-cov = "^3.0.0"
+black = "^22.6.0"
+isort = "^5.10.1"
 
 [tool.black]
 # https://github.com/psf/black

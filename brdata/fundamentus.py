@@ -208,3 +208,21 @@ def detalhes(symbol):
     results = {**results, **_table_with_double_header(tables[4])}
 
     return results
+
+
+@cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
+def fii_proventos(papel: str, group_by_year: bool = False) -> pd.DataFrame:
+    url = f"http://fundamentus.com.br/fii_proventos.php?papel={papel}"
+
+    r = requests.get(url, headers={"User-Agent": new_user_agent()})
+    df = pd.read_html(r.text, decimal=",", thousands=".", index_col=0)[0].reset_index()
+    df["Última Data Com"] = pd.to_datetime(df["Última Data Com"], format="%d/%m/%Y")
+    df["Data de Pagamento"] = pd.to_datetime(df["Data de Pagamento"], format="%d/%m/%Y")
+
+    if group_by_year:
+        return (
+            df.groupby(df["Data de Pagamento"].dt.year)["Valor"]
+            .agg(["sum"])
+            .rename(columns={"sum": "Valor"})
+        )
+    return df
