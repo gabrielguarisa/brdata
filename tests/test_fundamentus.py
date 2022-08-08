@@ -42,6 +42,7 @@ def test_fundamentus_detalhes():
     ]:
         assert col in detalhes
 
+
 def test_fundamentus_detalhes_with_ravel():
     fundamentus.detalhes.clear_cache()
     detalhes = fundamentus.detalhes("bbas3")

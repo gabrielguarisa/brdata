@@ -209,10 +209,29 @@ def detalhes(symbol: str, ravel: bool = True):
 
     if ravel:
         dre = pd.Series(
-            data=pd.concat([results['Dados demonstrativos de resultados']["Últimos 3 meses"], results['Dados demonstrativos de resultados']["Últimos 12 meses"]]).values, 
-            index=["Receita Líquida (3m)", "EBIT (3m)", "Lucro Líquido (3m)", "Receita Líquida (12m)", "EBIT (12m)", "Lucro Líquido (12m)"]
+            data=pd.concat(
+                [
+                    results["Dados demonstrativos de resultados"]["Últimos 3 meses"],
+                    results["Dados demonstrativos de resultados"]["Últimos 12 meses"],
+                ]
+            ).values,
+            index=[
+                "Receita Líquida (3m)",
+                "EBIT (3m)",
+                "Lucro Líquido (3m)",
+                "Receita Líquida (12m)",
+                "EBIT (12m)",
+                "Lucro Líquido (12m)",
+            ],
         )
-        return pd.concat([results["Metadata"], results["Indicadores fundamentalistas"], results["Dados Balanço Patrimonial"], dre]).convert_dtypes()
+        return pd.concat(
+            [
+                results["Metadata"],
+                results["Indicadores fundamentalistas"],
+                results["Dados Balanço Patrimonial"],
+                dre,
+            ]
+        ).convert_dtypes()
 
     return results
 
