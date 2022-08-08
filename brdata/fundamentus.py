@@ -190,7 +190,7 @@ def _table_with_double_header(table):
 
 
 @cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
-def detalhes(symbol):
+def detalhes(symbol: str, ravel: bool = True):
     tables = _get_detalhes_tables(symbol)
 
     results = {}
@@ -206,6 +206,13 @@ def detalhes(symbol):
     }
 
     results = {**results, **_table_with_double_header(tables[4])}
+
+    if ravel:
+        dre = pd.Series(
+            data=pd.concat([results['Dados demonstrativos de resultados']["Últimos 3 meses"], results['Dados demonstrativos de resultados']["Últimos 12 meses"]]).values, 
+            index=["Receita Líquida (3m)", "EBIT (3m)", "Lucro Líquido (3m)", "Receita Líquida (12m)", "EBIT (12m)", "Lucro Líquido (12m)"]
+        )
+        return pd.concat([results["Metadata"], results["Indicadores fundamentalistas"], results["Dados Balanço Patrimonial"], dre]).convert_dtypes()
 
     return results
 

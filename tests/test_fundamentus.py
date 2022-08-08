@@ -28,7 +28,7 @@ def test_fundamentus_balanco_historico():
 
 def test_fundamentus_detalhes():
     fundamentus.detalhes.clear_cache()
-    detalhes = fundamentus.detalhes("bbas3")
+    detalhes = fundamentus.detalhes("bbas3", ravel=False)
 
     assert isinstance(detalhes, dict)
     assert len(detalhes) > 1
@@ -41,3 +41,10 @@ def test_fundamentus_detalhes():
         "Dados demonstrativos de resultados",
     ]:
         assert col in detalhes
+
+def test_fundamentus_detalhes_with_ravel():
+    fundamentus.detalhes.clear_cache()
+    detalhes = fundamentus.detalhes("bbas3")
+
+    assert isinstance(detalhes, pd.Series)
+    assert len(detalhes) > 1
