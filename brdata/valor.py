@@ -24,7 +24,7 @@ def portfolios(month: int, year: int) -> pd.DataFrame:
         pd.DataFrame: Dataframe com os portfólios das instituições financeiras.
     """
     url = BASE_URL.format(month=month, year=year)
-    response = get_response(url)
+    response = get_response(url, verify=False)
     soup = BeautifulSoup(response.content, "html.parser", from_encoding="utf-8")
     tables = soup.find_all(class_="container-corretoras")[0].find_all("table")
 
@@ -52,7 +52,7 @@ def carteira_valor(month: int, year: int) -> pd.DataFrame:
         pd.DataFrame: Dataframe com os dados da carteira valor.
     """
     url = BASE_URL.format(month=month, year=year)
-    response = get_response(url)
+    response = get_response(url, verify=False)
     soup = BeautifulSoup(response.content, "html.parser", from_encoding="utf-8")
     table = soup.find_all(class_="bx-tabela-int")[0].find("table")
     df = pd.read_html(str(table), decimal=",", thousands=".")[0].dropna(axis="columns")
