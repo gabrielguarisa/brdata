@@ -138,13 +138,13 @@ b3.portfolio("ibov")
 Listando empresas disponíveis na B3:
 
 ```python
-b3.all_companies()
+b3.cias()
 ```
 
 Listando todas as BDRs disponíveis:
 
 ```python
-b3.all_bdrs()
+b3.bdrs()
 ```
 
 Detalhamento de uma empresa:

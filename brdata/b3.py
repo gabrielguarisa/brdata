@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, List, Union
 
 import base64
 import datetime
@@ -37,7 +37,15 @@ INDICES = {
 BASE_API_URL = "https://sistemaswebb3-listados.b3.com.br"
 
 
-def indices(description: bool = True) -> Dict[str, str]:
+def indices(description: bool = True) -> Union[Dict[str, str], List[str]]:
+    """Lista de índices válidos.
+
+    Args:
+        description (bool, optional): Retorna a descrição do índice. Defaults to True.
+
+    Returns:
+        Union[Dict[str, str], List[str]]: Lista de índices válidos.
+    """
     if description:
         return INDICES
 
@@ -56,7 +64,18 @@ def _get_api_data(path_url: str, payload: Dict[str, Any]) -> Dict[str, Any]:
 
 @cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
 def portfolio(indice: str, segment: bool = True) -> pd.DataFrame:
-    """Retorna a composição do portfólio do índice."""
+    """Retorna a composição do portfólio do índice.
+
+    Args:
+        indice (str): Nome do índice. Use a função `b3.indices()`.
+        segment (bool, optional): Indica se os segmentos serão retornados. Defaults to True.
+
+    Raises:
+        ValueError: Retornado caso não esteja na lista de índices válidos.
+
+    Returns:
+        pd.DataFrame: Lista de ativos que estão no índice.
+    """
     indice = indice.upper()
     if indice not in indices(False):
         raise ValueError(f"{indice} is not a valid indice")
@@ -81,7 +100,7 @@ def portfolio(indice: str, segment: bool = True) -> pd.DataFrame:
 
 
 @cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
-def all_companies() -> pd.DataFrame:
+def cias() -> pd.DataFrame:
     """Retorna todas as empresas listadas na B3."""
     payload = {"language": "en-us", "pageNumber": 1, "pageSize": 100}
     data = _get_api_data(
@@ -98,7 +117,7 @@ def all_companies() -> pd.DataFrame:
 
 
 @cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
-def all_bdrs() -> pd.DataFrame:
+def bdrs() -> pd.DataFrame:
     """Retorna todas as BDRs listadas na B3."""
     payload = {"language": "en-us", "pageNumber": 1, "pageSize": 100}
     data = _get_api_data("/listedCompaniesProxy/CompanyCall/GetCompaniesBDR/", payload)
@@ -117,3 +136,6 @@ def company_detail(cvm_code: str) -> pd.Series:
     data = _get_api_data("/listedCompaniesProxy/CompanyCall/GetDetail/", payload)
 
     return pd.Series(data)
+
+
+__all__ = ["indices", "portfolio", "cias", "bdrs", "company_detail"]

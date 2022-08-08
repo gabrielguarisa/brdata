@@ -37,18 +37,18 @@ def test_b3_portfolio_invalid_index():
         b3.portfolio("INVALID")
 
 
-def test_b3_all_companies():
-    b3.all_companies.clear_cache()
-    result = b3.all_companies()
+def test_b3_cias():
+    b3.cias.clear_cache()
+    result = b3.cias()
 
     assert isinstance(result, pd.DataFrame)
     assert len(result.columns) > 0
     assert len(result) > 0
 
 
-def test_b3_all_bdrs():
-    b3.all_bdrs.clear_cache()
-    result = b3.all_bdrs()
+def test_b3_bdrs():
+    b3.bdrs.clear_cache()
+    result = b3.bdrs()
 
     assert isinstance(result, pd.DataFrame)
     assert len(result.columns) > 0
