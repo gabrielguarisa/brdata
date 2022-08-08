@@ -1,4 +1,4 @@
-from typing import Tuple, Union
+from typing import Any, Dict, Tuple, Union
 
 import datetime
 import io
@@ -134,8 +134,8 @@ def resultados(fii: bool = False) -> pd.DataFrame:
     return df
 
 
-def _get_detalhes_tables(symbol):
-    url = f"http://www.fundamentus.com.br/detalhes.php?papel={symbol.lower()}"
+def _get_detalhes_tables(papel):
+    url = f"http://www.fundamentus.com.br/detalhes.php?papel={papel.lower()}"
     r = get_response(url)
 
     soup = BeautifulSoup(r.content, "html.parser", from_encoding="utf-8")
@@ -190,8 +190,17 @@ def _table_with_double_header(table):
 
 
 @cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
-def detalhes(symbol: str, ravel: bool = True):
-    tables = _get_detalhes_tables(symbol)
+def detalhes(papel: str, ravel: bool = True) -> Union[pd.Series, Dict[str, Any]]:
+    """Detalhamento dos ativos.
+
+    Args:
+        papel (str): Símbolo do ativo.
+        ravel (bool, optional): Define se a resposta será um pd.Series ou um dicionário. Defaults to True.
+
+    Returns:
+        Union[pd.Series, Dict[str, Any]]: Detalhes do ativo presentes no fundamentus.
+    """
+    tables = _get_detalhes_tables(papel)
 
     results = {}
 
@@ -238,6 +247,15 @@ def detalhes(symbol: str, ravel: bool = True):
 
 @cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
 def fii_proventos(papel: str, group_by_year: bool = False) -> pd.DataFrame:
+    """Histórico de proventos de um fundo imobiliário.
+
+    Args:
+        papel (str): Nome do fundo imobiliário.
+        group_by_year (bool, optional): Agrupa os proventos por ano. Defaults to False.
+
+    Returns:
+        pd.DataFrame: Histórico de proventos.
+    """
     url = f"http://fundamentus.com.br/fii_proventos.php?papel={papel}"
 
     r = requests.get(url, headers={"User-Agent": new_user_agent()})
@@ -252,3 +270,15 @@ def fii_proventos(papel: str, group_by_year: bool = False) -> pd.DataFrame:
             .rename(columns={"sum": "Valor"})
         )
     return df
+
+
+# TODO: Proventos das ações. Exemplo de url http://fundamentus.com.br/proventos.php?papel={papel}
+
+
+__all__ = [
+    "ler_balanco",
+    "balanco_historico",
+    "resultados",
+    "detalhes",
+    "fii_proventos",
+]

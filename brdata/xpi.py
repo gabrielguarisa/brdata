@@ -58,14 +58,17 @@ def _get_dados_produto(content: bytes) -> pd.Series:
 
 
 @cachier(stale_after=datetime.timedelta(hours=1), cache_dir=CACHE_DIR)
-def analise(symbol: str, tecnica: bool = False) -> pd.Series:
-    """Retorna os dados da análise de uma ação definida em 'symbol'.
+def analise(papel: str, tecnica: bool = False) -> pd.Series:
+    """Retorna os dados da análise de uma ação definida em 'papel'.
     Args:
-        symbol (str): Código da ação.
+        papel (str): Código da ação.
         tecnica (bool, optional): Retorna a análise técnica da ação. O valor padrão é False.
     Returns:
         pd.Series: Dados da análise.
     """
-    url = f"https://conteudos.xpi.com.br/acoes/{symbol.lower()}{'/analise-tecnica/' if tecnica else '/'}"
+    url = f"https://conteudos.xpi.com.br/acoes/{papel.lower()}{'/analise-tecnica/' if tecnica else '/'}"
     response = get_response(url)
     return _get_dados_produto(response.content)
+
+
+__all__ = ["analise"]

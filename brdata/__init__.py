@@ -1,4 +1,4 @@
 """brdata"""
-from . import b3, cvm, fundamentus, valor, xpi
+from . import b3, cvm, fundamentus, statusinvest, valor, xpi
 
-__all__: list = ["b3", "cvm", "fundamentus", "xpi", "valor"]
+__all__: list = ["b3", "cvm", "fundamentus", "statusinvest", "valor", "xpi"]

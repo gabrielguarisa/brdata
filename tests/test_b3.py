@@ -55,9 +55,9 @@ def test_b3_bdrs():
     assert len(result) > 0
 
 
-def test_b3_company_detail():
-    b3.company_detail.clear_cache()
-    result = b3.company_detail("25135")
+def test_b3_detalhes():
+    b3.detalhes.clear_cache()
+    result = b3.detalhes("25135")
 
     assert isinstance(result, pd.Series)
     assert len(result) > 0

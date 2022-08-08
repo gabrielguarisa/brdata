@@ -130,7 +130,7 @@ def bdrs() -> pd.DataFrame:
 
 
 @cachier(stale_after=datetime.timedelta(days=7), cache_dir=CACHE_DIR)
-def company_detail(cvm_code: str) -> pd.Series:
+def detalhes(cvm_code: str) -> pd.Series:
     """Retorna as informações detalhadas de uma empresa."""
     payload = {"language": "en-us", "codeCVM": cvm_code}
     data = _get_api_data("/listedCompaniesProxy/CompanyCall/GetDetail/", payload)
@@ -138,4 +138,4 @@ def company_detail(cvm_code: str) -> pd.Series:
     return pd.Series(data)
 
 
-__all__ = ["indices", "portfolio", "cias", "bdrs", "company_detail"]
+__all__ = ["indices", "portfolio", "cias", "bdrs", "detalhes"]

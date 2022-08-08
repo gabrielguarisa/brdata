@@ -8,7 +8,18 @@ def fii_proventos(
     group_by_year: bool = False,
     group_by_year_col: str = "Última Data Com",
     provents_type: int = 2,
-):
+) -> pd.DataFrame:
+    """Histórico de proventos de um fundo imobiliário.
+
+    Args:
+        papel (str): Nome do fundo imobiliário.
+        group_by_year (bool, optional): Agrupa os proventos por ano. Defaults to False.
+        group_by_year_col (str, optional): Coluna usada para agrupamento por ano. Defaults to "Última Data Com".
+        provents_type (int, optional): Tipo de provento. Defaults to 2.
+
+    Returns:
+        pd.DataFrame: Histórico de proventos.
+    """
     url = f"https://statusinvest.com.br/fii/companytickerprovents?ticker={papel}&chartProventsType={provents_type}"
 
     r = get_response(url)
@@ -27,3 +38,8 @@ def fii_proventos(
         )
 
     return df[["Última Data Com", "Data de Pagamento", "Valor"]]
+
+
+# TODO: Proventos das ações.
+
+__all__ = ["fii_proventos"]

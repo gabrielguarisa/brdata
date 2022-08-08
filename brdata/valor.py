@@ -60,3 +60,6 @@ def carteira_valor(month: int, year: int) -> pd.DataFrame:
         lambda x: re.search("\(([^\)]+)\)", x).group()[1:-1]
     )
     return df
+
+
+__all__ = ["portfolios", "carteira_valor"]

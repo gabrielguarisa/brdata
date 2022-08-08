@@ -150,7 +150,7 @@ b3.bdrs()
 Detalhamento de uma empresa:
 
 ```python
-b3.company_detail(cvm_code="25135")
+b3.detalhes(cvm_code="25135")
 ```
 
 ### Valor Econômico
