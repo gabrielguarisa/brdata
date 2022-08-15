@@ -75,7 +75,7 @@ def get_table_links(
 
     valid_links = []
 
-    for link_elem in soup.find_all("table")[0].find_all("a"):
+    for link_elem in soup.find_all("a"):
         link = link_elem.get("href")
         if link[-4:] == extension:
             valid_links.append(f"{url}{link}")
