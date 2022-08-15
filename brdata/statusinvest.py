@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 from brdata.utils import get_response
@@ -26,8 +27,12 @@ def proventos(
 
     df = pd.DataFrame(r.json()["assetEarningsModels"])
 
-    df["Última Data Com"] = pd.to_datetime(df["ed"], format="%d/%m/%Y")
-    df["Data de Pagamento"] = pd.to_datetime(df["pd"], format="%d/%m/%Y")
+    df["Última Data Com"] = pd.to_datetime(
+        df["ed"].replace("-", np.nan), format="%d/%m/%Y"
+    )
+    df["Data de Pagamento"] = pd.to_datetime(
+        df["pd"].replace("-", np.nan), format="%d/%m/%Y"
+    )
     df["Valor"] = df["v"]
 
     if group_by_year:
