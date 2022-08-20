@@ -43,6 +43,7 @@ class GeralFCA(_Base):
     def get_most_recent_cias_info(self) -> pd.DataFrame:
         """Retorna os últimos dados encontrados para cada CNPJ"""
         df = pd.concat([self.get_data(year) for year in self.get_years()])
+        df.Data_Referencia = pd.to_datetime(df.Data_Referencia)
         return (
             df.sort_values(by=["Data_Referencia", "Versao"])
             .drop_duplicates(subset=["CNPJ_Companhia"], keep="last")
@@ -64,3 +65,28 @@ class ValorMobiliarioFCA(_Base):
             if len(fca) > 0:
                 return fca.reset_index(drop=True)
         return None
+
+    def get_most_recent_cias_info(
+        self, remove_non_active_cias: bool = True
+    ) -> pd.DataFrame:
+        """Retorna os últimos dados encontrados para cada CNPJ"""
+        df = pd.concat([self.get_data(year) for year in self.get_years()])
+
+        df = df.dropna(
+            subset=["Data_Referencia", "CNPJ_Companhia", "Codigo_Negociacao"]
+        )
+        df.Data_Referencia = pd.to_datetime(df.Data_Referencia)
+        df = (
+            df.sort_values(by=["Data_Referencia", "Versao"])
+            .drop_duplicates(subset=["Codigo_Negociacao"], keep="last")
+            .reset_index()
+        )
+
+        if remove_non_active_cias:
+            df = df[df.Data_Fim_Negociacao.isna()]
+
+        return df[
+            df["Codigo_Negociacao"].str.contains(
+                "^[A-Za-z]+.*[0-9]+$", regex=True, na=False
+            )
+        ]
