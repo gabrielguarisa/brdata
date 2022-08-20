@@ -4,22 +4,22 @@ import datetime
 import re
 
 import pandas as pd
+import urllib3
 from bs4 import BeautifulSoup
 from cachier import cachier
 
 from brdata.utils import CACHE_DIR, get_response
 
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 BASE_URL = "https://www.valor.com.br/carteira-valor-iframe/historico/{month}/{year}"
 
 
-@cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
 def portfolios(month: int, year: int) -> pd.DataFrame:
     """Portfólios das instituições financeiras.
-
     Args:
         month (int): Mês.
         year (int): Ano.
-
     Returns:
         pd.DataFrame: Dataframe com os portfólios das instituições financeiras.
     """
@@ -35,7 +35,7 @@ def portfolios(month: int, year: int) -> pd.DataFrame:
             re.search("\(([^\)]+)\)", a.text).group()[1:-1]
             for a in data.find("tbody").find_all("tr")
         ]
-        portfolios[name] = acoes
+        portfolios[name] = pd.Series(acoes)
 
     return pd.DataFrame(portfolios)
 
