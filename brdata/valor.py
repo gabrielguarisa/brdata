@@ -15,11 +15,13 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 BASE_URL = "https://www.valor.com.br/carteira-valor-iframe/historico/{month}/{year}"
 
 
-def portfolios(month: int, year: int) -> pd.DataFrame:
+@cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
+def portfolios(month: int, year: int, melt: bool = True) -> pd.DataFrame:
     """Portfólios das instituições financeiras.
     Args:
         month (int): Mês.
         year (int): Ano.
+        melt (bool): Caso True, retorna os portfolios comprimidos em duas colunas.
     Returns:
         pd.DataFrame: Dataframe com os portfólios das instituições financeiras.
     """
@@ -36,6 +38,9 @@ def portfolios(month: int, year: int) -> pd.DataFrame:
             for a in data.find("tbody").find_all("tr")
         ]
         portfolios[name] = pd.Series(acoes)
+
+    if melt:
+        return pd.DataFrame(portfolios).melt(var_name="Research", value_name="Papel")
 
     return pd.DataFrame(portfolios)
 
