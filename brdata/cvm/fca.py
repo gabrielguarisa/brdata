@@ -40,6 +40,15 @@ class GeralFCA(_Base):
 
         return pd.DataFrame(data)
 
+    def get_most_recent_cias_info(self) -> pd.DataFrame:
+        """Retorna os últimos dados encontrados para cada CNPJ"""
+        df = pd.concat([self.get_data(year) for year in self.get_years()])
+        return (
+            df.sort_values(by=["Data_Referencia", "Versao"])
+            .drop_duplicates(subset=["CNPJ_Companhia"], keep="last")
+            .reset_index()
+        )
+
 
 class ValorMobiliarioFCA(_Base):
     def __init__(self, folder: str):
