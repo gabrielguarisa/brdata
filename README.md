@@ -7,6 +7,7 @@
 
 <div align="center">
 
+[![Package version](https://img.shields.io/pypi/v/brasil-data?color=%2334D058&label=pypi%20package)](https://pypi.org/project/brasil-data/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Semantic Versions](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--versions-e10079.svg)](https://github.com/gabrielguarisa/brdata/releases)
 [![License](https://img.shields.io/github/license/gabrielguarisa/brdata)](https://github.com/gabrielguarisa/brdata/blob/main/LICENSE)
@@ -60,59 +61,48 @@ Importando módulo:
 from brdata import cvm
 ```
 
-Baixando os arquivos de dados:
+Baixando os dados para um determinado tipo de formulário:
 
 ```python
-cvm.download_data("data")
+cvm.get_data(name)
 ```
 
-Baixando os arquivos de metadados:
+Obtendo os valores válidos para o parâmetro `name`:
 
 ```python
-cvm.download_metadata("data")
+cvm.get_valid_names()
+# ['dfp', 'fca', 'fre', 'ipe', 'itr']
 ```
-
-#### Formulário Cadastral
+#### Formulário Cadastral (FCA)
 
 Usando dados do [formulário cadastral](https://dados.gov.br/dataset/cia_aberta-doc-fca):
 
 ```python
-g_fca = cvm.GeralFCA("data")
-vm_fca = cvm.ValorMobiliarioFCA("data")
+fca = cvm.FCAReader()
 ```
 
-Consultando dados para uma determinada companhia:
+Consultando anos disponíveis de dados:
 
 ```python
-g_fca.get_cia(cvm_code=14460)
-# OU
-g_fca.get_cia(cnpj="47.960.950/0001-21")
+fca.years
 ```
 
-Número de companhias cadastradas por ano:
+Consumindo dados históricos de uma determinada empresa num determinado prefixo:
 
 ```python
-g_fca.get_num_cias_per_year()
+fca.processors[prefix].get_cia_history("47.960.950/0001-21")
 ```
 
-Quantidade de empresas cadastradas por setor em cada ano:
+Consumindo os dados mais recentes para cada uma das empresas num determinado prefixo:
 
 ```python
-g_fca.get_sectors_per_year()
+fca.processors[prefix].get_most_recent()
 ```
 
-#### Formulário de Referência
-
-Usando dados do [formulário de referência](https://dados.gov.br/dataset/cia_aberta-doc-fre):
+Consultando valores válidos de `prefix`:
 
 ```python
-cvm.DistribuicaoCapitalFRE("data")
-```
-
-Consultando dados para uma determinada companhia:
-
-```python
-d_fre.get_cia("47.960.950/0001-21")
+fca.prefixes
 ```
 
 ### B3
@@ -172,3 +162,7 @@ Carteira Valor:
 ```python
 valor.carteira_valor(2, 2022)
 ```
+
+## Contribuindo com o projeto
+
+Para contribuir com o projeto, consulte o [guia de contribuição](https://github.com/gabrielguarisa/brdata/blob/main/CONTRIBUTING.md).
