@@ -77,6 +77,39 @@ def download_metadata(folder: str, to_dataframe: bool = True) -> List[str]:
 
 
 @cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
+def download(output_folder: str, name: str):
+    """Baixa os arquivos de dados da cvm"""
+    all_filenames = []
+    name = name.lower()
+    urls = get_data_urls()
+    if name not in urls:
+        raise ValueError(f"Name {name} not found!")
+    url = urls[name]
+
+    for link in get_table_links(url, as_dict=False):
+        os.makedirs(output_folder, exist_ok=True)
+
+        response = get_response(link)
+
+        with ZipFile(BytesIO(response.content)) as zip:
+            filenames = zip.namelist()
+
+            for filename in filenames:
+                if filename.endswith(".csv"):
+                    try:
+                        final_filename = os.path.join(output_folder, filename)
+                        df = pd.read_csv(
+                            zip.open(filename), delimiter=";", encoding="latin1"
+                        )
+                        df.to_csv(final_filename, index=False)
+                        all_filenames.append(final_filename)
+                    except Exception as e:
+                        print("Invalid file", final_filename, e)
+
+    return all_filenames
+
+
+@cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
 def download_data(folder: str, names: Union[str, List[str]] = None) -> List[str]:
     """Baixa os arquivos de dados da cvm"""
     all_filenames = []
@@ -87,30 +120,8 @@ def download_data(folder: str, names: Union[str, List[str]] = None) -> List[str]
     elif isinstance(names, str):
         names = [names]
 
-    names = [name.lower() for name in names]
+    for name in [name.lower() for name in names]:
+        filenames = download(os.path.join(folder, name), name)
+        all_filenames.extend(filenames)
 
-    base_path = os.path.join(folder, "cvm/data/")
-    for name, url in urls.items():
-        if name in names:
-            links = get_table_links(url, as_dict=False)
-            for link in links:
-                full_path = os.path.join(base_path, name)
-                os.makedirs(full_path, exist_ok=True)
-
-                response = get_response(link)
-
-                with ZipFile(BytesIO(response.content)) as zip:
-                    filenames = zip.namelist()
-
-                    for filename in filenames:
-                        if filename.endswith(".csv"):
-                            try:
-                                final_filename = os.path.join(full_path, filename)
-                                df = pd.read_csv(
-                                    zip.open(filename), delimiter=";", encoding="latin1"
-                                )
-                                df.to_csv(final_filename, index=False)
-                                all_filenames.append(final_filename)
-                            except Exception as e:
-                                print("Invalid file", final_filename, e)
     return all_filenames
