@@ -4,9 +4,9 @@ import datetime
 from io import BytesIO
 from zipfile import ZipFile
 
-import cachier
 import pandas as pd
 from bs4 import BeautifulSoup
+from cachier import cachier
 
 from brdata.utils import CACHE_DIR, get_response
 
