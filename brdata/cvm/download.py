@@ -1,94 +1,68 @@
-from typing import List, Union
+import typing
 
 import datetime
-import glob
-import os
 from io import BytesIO
 from zipfile import ZipFile
 
+import cachier
 import pandas as pd
-from cachier import cachier
+from bs4 import BeautifulSoup
 
-from brdata.utils import CACHE_DIR, get_response, remove_empty_str
+from brdata.utils import CACHE_DIR, get_response
 
-from ._utils import (
-    METADATA_EXTENSIONS,
-    get_data_urls,
-    get_metadata_urls,
-    get_table_links,
-)
-
-
-def convert_metadata_to_dataframe(filename: str) -> pd.DataFrame:
-    """Converte um arquivo de metadata em um dataframe"""
-    with open(filename, "r", encoding="latin1") as f:
-        data = f.read()
-
-    variables = {}
-    last_var = None
-    line_trigger = False
-    for line in filter(None, data.split("\n")):
-        if line[0] == "-":
-            line_trigger = not line_trigger
-        else:
-            key, value = line.split(":")
-            if line_trigger:
-                value = remove_empty_str(value)
-                variables[value] = {}
-                last_var = value
-            else:
-                variables[last_var][remove_empty_str(key)] = remove_empty_str(value)
-
-    return pd.DataFrame(variables).T.reset_index().rename(columns={"index": "Nome"})
+URLS = {
+    "dfp": "http://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/",
+    "fca": "http://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/FCA/",
+    "fre": "http://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/FRE/",
+    "ipe": "http://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/IPE/",
+    "itr": "http://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/ITR/",
+}
 
 
-@cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
-def download_metadata(folder: str, to_dataframe: bool = True) -> List[str]:
-    """Baixa os arquivos de metadata da cvm"""
-    base_path = os.path.join(folder, "cvm/metadata/")
-    for name, url in get_metadata_urls().items():
-        extension = METADATA_EXTENSIONS[name]
-        links = get_table_links(url, extension, as_dict=False)
-        full_path = os.path.join(base_path, name)
-        for link in links:
-            os.makedirs(full_path, exist_ok=True)
-            if extension == ".zip":
-                with ZipFile(BytesIO(get_response(link).content)) as zip:
-                    zip.extractall(full_path)
-            elif extension == ".txt":
-                filename = os.path.join(full_path, link.split("/")[-1])
-                with open(filename, "wb") as f:
-                    f.write(get_response(link).content)
-
-    all_filenames = glob.glob(os.path.join(base_path, "*/*.txt"))
-
-    if to_dataframe:
-        csv_filenames = []
-        for filename in all_filenames:
-            csv_filenames.append(filename.replace(".txt", ".csv"))
-            convert_metadata_to_dataframe(filename).to_csv(
-                csv_filenames[-1], index=False
-            )
-            os.remove(filename)
-
-        return csv_filenames
-
-    return all_filenames
+def get_valid_names() -> typing.List[str]:
+    """Retorna os nomes válidos de datasets da cvm"""
+    return list(URLS.keys())
 
 
-@cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
-def download(output_folder: str, name: str):
-    """Baixa os arquivos de dados da cvm"""
-    all_filenames = []
+def get_data_urls(name: str = None) -> typing.Union[typing.Dict[str, str], str]:
+    """Retorna as URLs de dados do CVM"""
+    if name is None:
+        return {name: f"{url}DADOS/" for name, url in URLS.items()}
+
     name = name.lower()
-    urls = get_data_urls()
-    if name not in urls:
-        raise ValueError(f"Name {name} not found!")
-    url = urls[name]
+    if name not in get_valid_names():
+        raise ValueError(f"{name} is not a valid name")
+
+    return f"{URLS[name]}DADOS/"
+
+
+def get_table_links(
+    url: str, extension: str = ".zip", as_dict: bool = True
+) -> typing.Dict[str, str]:
+    """Retorna todos os links da tabela de arquivos de um dataset da cvm"""
+    response = get_response(url)
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    valid_links = []
+
+    for link_elem in soup.find_all("a"):
+        link = link_elem.get("href")
+        if link[-4:] == extension:
+            valid_links.append(f"{url}{link}")
+
+    if as_dict:
+        return {zip_url[-8:-4]: zip_url for zip_url in valid_links}
+
+    return valid_links
+
+
+@cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
+def get_data(name: str) -> typing.Dict[str, pd.DataFrame]:
+    """Baixa os arquivos de dados da cvm"""
+    all_dfs = {}
+    url = get_data_urls(name)
 
     for link in get_table_links(url, as_dict=False):
-        os.makedirs(output_folder, exist_ok=True)
-
         response = get_response(link)
 
         with ZipFile(BytesIO(response.content)) as zip:
@@ -96,32 +70,13 @@ def download(output_folder: str, name: str):
 
             for filename in filenames:
                 if filename.endswith(".csv"):
+                    final_name = filename[: -len(".csv")]
                     try:
-                        final_filename = os.path.join(output_folder, filename)
                         df = pd.read_csv(
                             zip.open(filename), delimiter=";", encoding="latin1"
                         )
-                        df.to_csv(final_filename, index=False)
-                        all_filenames.append(final_filename)
+                        all_dfs[final_name] = df
                     except Exception as e:
-                        print("Invalid file", final_filename, e)
+                        print("Invalid file", final_name, e)
 
-    return all_filenames
-
-
-@cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
-def download_data(folder: str, names: Union[str, List[str]] = None) -> List[str]:
-    """Baixa os arquivos de dados da cvm"""
-    all_filenames = []
-    urls = get_data_urls()
-
-    if names is None:
-        names = list(urls.keys())
-    elif isinstance(names, str):
-        names = [names]
-
-    for name in [name.lower() for name in names]:
-        filenames = download(os.path.join(folder, name), name)
-        all_filenames.extend(filenames)
-
-    return all_filenames
+    return all_dfs
