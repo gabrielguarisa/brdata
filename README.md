@@ -61,7 +61,7 @@ Importando módulo:
 from brdata import cvm
 ```
 
-Baixando os dados para um determinado tipo de formulário:
+Baixando os dados para um determinado tipo de prefixo:
 
 ```python
 cvm.get_data(prefix)
@@ -73,36 +73,42 @@ Obtendo os valores válidos para o parâmetro `prefix`:
 cvm.get_valid_prefixes()
 # ['dfp', 'fca', 'fre', 'ipe', 'itr']
 ```
+
+Consumindo os valores dos formulários para cada um dos prefixos:
+
+```python
+r = cvm.Reader(prefix)
+
+Consultando anos disponíveis de dados:
+
+```python
+r.years
+```
+
 #### Formulário Cadastral (FCA)
 
 Usando dados do [formulário cadastral](https://dados.gov.br/dataset/cia_aberta-doc-fca):
 
 ```python
-fca = cvm.FCAReader()
+fca = cvm.Reader("fca")
 ```
 
-Consultando anos disponíveis de dados:
+Consumindo dados históricos de uma determinada empresa num determinado formulário (`form_name`):
 
 ```python
-fca.years
+fca.processors[form_name].get_cia_history("47.960.950/0001-21")
 ```
 
-Consumindo dados históricos de uma determinada empresa num determinado prefixo:
+Consumindo os dados mais recentes para cada uma das empresas num determinado formulário (`form_name`):
 
 ```python
-fca.processors[prefix].get_cia_history("47.960.950/0001-21")
+fca.processors[form_name].get_most_recent()
 ```
 
-Consumindo os dados mais recentes para cada uma das empresas num determinado prefixo:
+Consultando valores válidos para `form_name`:
 
 ```python
-fca.processors[prefix].get_most_recent()
-```
-
-Consultando valores válidos de `prefix`:
-
-```python
-fca.prefixes
+fca.forms
 ```
 
 ### B3
