@@ -19,21 +19,21 @@ URLS = {
 }
 
 
-def get_valid_names() -> typing.List[str]:
-    """Retorna os nomes válidos de datasets da cvm"""
+def get_valid_prefixes() -> typing.List[str]:
+    """Retorna os prefixos válidos de datasets da cvm"""
     return list(URLS.keys())
 
 
-def get_data_urls(name: str = None) -> typing.Union[typing.Dict[str, str], str]:
+def get_data_urls(prefix: str = None) -> typing.Union[typing.Dict[str, str], str]:
     """Retorna as URLs de dados do CVM"""
-    if name is None:
+    if prefix is None:
         return {name: f"{url}DADOS/" for name, url in URLS.items()}
 
-    name = name.lower()
-    if name not in get_valid_names():
-        raise ValueError(f"{name} is not a valid name")
+    prefix = prefix.lower()
+    if prefix not in get_valid_prefixes():
+        raise ValueError(f"{prefix} is not a valid name")
 
-    return f"{URLS[name]}DADOS/"
+    return f"{URLS[prefix]}DADOS/"
 
 
 def get_table_links(
@@ -57,10 +57,10 @@ def get_table_links(
 
 
 @cachier(stale_after=datetime.timedelta(days=1), cache_dir=CACHE_DIR)
-def get_data(name: str) -> typing.Dict[str, pd.DataFrame]:
+def get_data(prefix: str) -> typing.Dict[str, pd.DataFrame]:
     """Baixa os arquivos de dados da cvm"""
     all_dfs = {}
-    url = get_data_urls(name)
+    url = get_data_urls(prefix)
 
     for link in get_table_links(url, as_dict=False):
         response = get_response(link)

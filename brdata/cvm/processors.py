@@ -2,23 +2,15 @@ import typing
 
 import pandas as pd
 
-from .download import get_data
 
-
-class FCAProcessor:
-    def __init__(
-        self,
-        cnpj_col: str = "CNPJ_Companhia",
-        date_col: str = "Data_Referencia",
-        version_col: str = "Versao",
-    ):
+class Processor:
+    def __init__(self, **cols) -> None:
+        self._cols = cols
         self._data = None
-
-        self._cols = {"cnpj": cnpj_col, "date": date_col, "version": version_col}
 
     def set_data(
         self, data: typing.Union[pd.DataFrame, typing.List[pd.DataFrame]]
-    ) -> "FCAProcessor":
+    ) -> "Processor":
         """Seta os dados"""
         if isinstance(data, pd.DataFrame):
             data = [data]
@@ -35,6 +27,17 @@ class FCAProcessor:
     def data(self) -> pd.DataFrame:
         return self._data
 
+
+class CNPJProcessor(Processor):
+    def __init__(
+        self,
+        cnpj_col: str = "CNPJ_Companhia",
+        date_col: str = "Data_Referencia",
+        version_col: str = "Versao",
+        **cols,
+    ):
+        super().__init__(cnpj=cnpj_col, date=date_col, version=version_col, **cols)
+
     def get_most_recent(self) -> pd.DataFrame:
         """Retorna os últimos dados encontrados para cada CNPJ"""
         df = (
@@ -50,20 +53,20 @@ class FCAProcessor:
         return self.data[self.data[self._cols["cnpj"]] == cnpj].reset_index(drop=True)
 
 
-class ValorMobiliarioProcessor(FCAProcessor):
+class FCAValorMobiliarioProcessor(CNPJProcessor):
     def __init__(
         self,
         cia_code_col: str = "Codigo_Negociacao",
         end_negotiation_col: str = "Data_Fim_Negociacao",
-        **kwargs,
+        **cols,
     ):
-        super().__init__(**kwargs)
-        self._cols["cia_code"] = cia_code_col
-        self._cols["end_negotiation"] = end_negotiation_col
+        super().__init__(
+            cia_code=cia_code_col, end_negotiation=end_negotiation_col, **cols
+        )
 
     def set_data(
         self, data: typing.Union[pd.DataFrame, typing.List[pd.DataFrame]]
-    ) -> "ValorMobiliarioProcessor":
+    ) -> "FCAValorMobiliarioProcessor":
         super().set_data(data)
 
         self._data = self._data.dropna(
@@ -90,55 +93,25 @@ class ValorMobiliarioProcessor(FCAProcessor):
         return df
 
 
-PROCESSOR_BY_PREFIX = {
-    "fca_cia_aberta_valor_mobiliario": ValorMobiliarioProcessor(),
-    "fca_cia_aberta": FCAProcessor(
-        cnpj_col="CNPJ_CIA", date_col="DT_REFER", version_col="VERSAO"
-    ),
+PROCESSORS = {
+    "fca": {
+        "__default__": CNPJProcessor(),
+        "cia_aberta_valor_mobiliario": FCAValorMobiliarioProcessor(),
+        "cia_aberta": CNPJProcessor(
+            cnpj_col="CNPJ_CIA", date_col="DT_REFER", version_col="VERSAO"
+        ),
+    },
+    "fre": {
+        "__default__": CNPJProcessor(),
+        "cia_aberta": CNPJProcessor(
+            cnpj_col="CNPJ_CIA", date_col="DT_REFER", version_col="VERSAO"
+        ),
+    },
+    "__default__": {"__default__": Processor()},
 }
 
 
-class FCAReader:
-    def __init__(self, data: typing.Dict[str, pd.DataFrame] = get_data("fca")) -> None:
-        _dfs = {}
-        self._processors = {}
-        self._years = []
+def get_processor(prefix: str, form_name: str) -> Processor:
+    processor = PROCESSORS.get(prefix, PROCESSORS["__default__"])
 
-        for filename in list(data.keys()):
-            prefix = filename[:-5]
-            year = int(filename[-4:])
-
-            if year not in self._years:
-                self._years.append(year)
-
-            if prefix not in _dfs:
-                _dfs[prefix] = []
-
-            _dfs[prefix].append(data[filename])
-
-        for prefix, group in _dfs.items():
-            self._processors[prefix] = PROCESSOR_BY_PREFIX.get(
-                prefix, FCAProcessor()
-            ).set_data(group)
-
-        self._years.sort()
-
-    @property
-    def processors(self) -> typing.Dict[str, FCAProcessor]:
-        return self._processors
-
-    @property
-    def years(self) -> typing.List[int]:
-        return self._years
-
-    @property
-    def prefixes(self) -> typing.List[str]:
-        return list(self._processors.keys())
-
-    def get_data(self, prefix: str) -> pd.DataFrame:
-        if prefix not in self.processors:
-            raise ValueError(
-                f"Prefix {prefix} not found. Available prefixes: {self.prefixes}"
-            )
-
-        return self.processors[prefix].data
+    return processor.get(form_name, processor["__default__"])

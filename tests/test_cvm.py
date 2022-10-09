@@ -1,4 +1,4 @@
-from brdata.cvm._utils import get_table_links
+from brdata.cvm import get_table_links
 
 
 def test_get_table_links():

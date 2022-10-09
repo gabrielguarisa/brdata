@@ -64,13 +64,13 @@ from brdata import cvm
 Baixando os dados para um determinado tipo de formulário:
 
 ```python
-cvm.get_data(name)
+cvm.get_data(prefix)
 ```
 
-Obtendo os valores válidos para o parâmetro `name`:
+Obtendo os valores válidos para o parâmetro `prefix`:
 
 ```python
-cvm.get_valid_names()
+cvm.get_valid_prefixes()
 # ['dfp', 'fca', 'fre', 'ipe', 'itr']
 ```
 #### Formulário Cadastral (FCA)
