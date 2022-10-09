@@ -78,6 +78,7 @@ Consumindo os valores dos formulários para cada um dos prefixos:
 
 ```python
 r = cvm.Reader(prefix)
+```
 
 Consultando anos disponíveis de dados:
 
