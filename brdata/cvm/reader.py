@@ -33,8 +33,8 @@ class Reader:
             form_name = original_form_name[len(calc_prefix) + 1 :]
 
             self._processors[form_name] = processors.get_processor(
-                calc_prefix.lower(), form_name.lower()
-            ).set_data(group)
+                calc_prefix.lower(), form_name.lower(), group
+            )
 
         self._years.sort()
 
