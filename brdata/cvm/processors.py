@@ -40,7 +40,7 @@ class CNPJProcessor(Processor):
         """Retorna os últimos dados encontrados para cada CNPJ"""
         df = (
             self.data.sort_values(by=[self._cols["date"], self._cols["version"]])
-            .drop_duplicates(subset=[self._cols["cia_code"]], keep="last")
+            .drop_duplicates(subset=[self._cols["cnpj"]], keep="last")
             .reset_index(drop=True)
         )
 
