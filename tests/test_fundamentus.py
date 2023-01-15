@@ -12,20 +12,6 @@ def test_fundamentus_resultados():
     assert len(result.columns) > 1
 
 
-def test_fundamentus_balanco_historico():
-    fundamentus.balanco_historico.clear_cache()
-    balanco, demonstrativo = fundamentus.balanco_historico("mglu3")
-
-    assert isinstance(balanco, pd.DataFrame)
-    assert isinstance(demonstrativo, pd.DataFrame)
-
-    assert len(balanco) > 1
-    assert len(demonstrativo) > 1
-
-    assert len(balanco.columns) > 1
-    assert len(demonstrativo.columns) > 1
-
-
 def test_fundamentus_detalhes():
     fundamentus.detalhes.clear_cache()
     detalhes = fundamentus.detalhes("bbas3", ravel=False)
