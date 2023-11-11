@@ -3,7 +3,6 @@ import typing
 from urllib.parse import urljoin
 
 import bs4
-from cache_decorator import Cache
 from dict_hash import Hashable
 
 from .req import get_response
@@ -18,11 +17,6 @@ class Crawler(Hashable):
             self.url if self.url.endswith("/") else f"{self.url}/", "/".join(args)
         )
 
-    @Cache(
-        cache_path="{cache_dir}/{function_name}_{url}_{self.url}.txt",
-        validity_duration="1d",
-        enable_cache_arg_name="enable_cache",
-    )
     def get_page(self, url: str = None, path: str = str, **kwargs) -> str:
         base_url = url if url is not None else self.url
 

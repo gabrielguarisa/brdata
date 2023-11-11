@@ -1,5 +1,7 @@
 import requests
 from random_user_agent.user_agent import UserAgent
+from brdata.core import exceptions
+from cache_decorator import Cache
 
 user_agent_rotator = UserAgent()
 
@@ -9,6 +11,10 @@ def new_user_agent() -> str:
     return user_agent_rotator.get_random_user_agent()
 
 
+@Cache(
+    validity_duration="1d",
+    enable_cache_arg_name="enable_cache",
+)
 def get_response(
     url: str, max_retries: int = 5, timeout: int = 10, verify: bool = True
 ) -> requests.Response:
@@ -35,4 +41,4 @@ def get_response(
             if i >= max_retries:
                 break
 
-    raise requests.exceptions.HTTPError("Maximum number of attempts exceeded")
+    raise exceptions.RequestException(f"Maximum number of attempts exceeded for {url}")
