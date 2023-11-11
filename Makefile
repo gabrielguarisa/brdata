@@ -4,8 +4,11 @@ init:
 
 .PHONY: formatting
 formatting:
-	poetry run isort --settings-path pyproject.toml ./
-	poetry run black --config pyproject.toml ./
+	poetry run ruff format .
+
+.PHONY: linting
+linting:
+	poetry run ruff check .
 
 .PHONY: tests
 tests:
