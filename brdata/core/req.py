@@ -1,25 +1,12 @@
-import shutil
-import warnings
-
 import requests
-from appdirs import user_cache_dir
 from random_user_agent.user_agent import UserAgent
-from cache_decorator import Cache
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
-warnings.filterwarnings("ignore")
-
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-
-__user_agent_rotator = UserAgent()
-
-PKG_NAME = __name__.split(".")[0]
-CACHE_DIR: str = user_cache_dir(PKG_NAME)
+user_agent_rotator = UserAgent()
 
 
 def new_user_agent() -> str:
     """Retorna um novo User-Agent."""
-    return __user_agent_rotator.get_random_user_agent()
+    return user_agent_rotator.get_random_user_agent()
 
 
 def get_response(
@@ -49,12 +36,3 @@ def get_response(
                 break
 
     raise requests.exceptions.HTTPError("Maximum number of attempts exceeded")
-
-
-def clear_chache() -> None:
-    """Remove qualquer dado no cache."""
-    shutil.rmtree(CACHE_DIR, ignore_errors=True)
-
-
-def remove_empty_str(x: str) -> str:
-    return next(filter(None, x.split(" ")))
