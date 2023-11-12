@@ -3,6 +3,7 @@ import typing
 import bs4
 import pandas as pd
 from brdata.core.crawler import Crawler
+from brdata.core import exceptions
 
 
 class ValorEconomicoCrawler(Crawler):
@@ -17,7 +18,7 @@ class ValorEconomicoCrawler(Crawler):
 
     def __init__(self):
         super().__init__(
-            f"https://infograficos.valor.globo.com/carteira-valor/historico"
+            "https://infograficos.valor.globo.com/carteira-valor/historico"
         )
 
     def get_page_soup(
@@ -29,10 +30,10 @@ class ValorEconomicoCrawler(Crawler):
         element = page.find("a", {"id": "datepicker-historico"})
 
         if not element:
-            raise Exception("[ValorEconomico] No datepicker found.")
+            raise exceptions.NotFoundException("[ValorEconomico] No datepicker found.")
 
         if element["data-mes"] != str(month) or element["data-ano"] != str(year):
-            raise Exception(
+            raise exceptions.NotFoundException(
                 f"[ValorEconomico] No data found for the given month and year: {month}/{year}"
             )
         return page
@@ -91,10 +92,10 @@ class ValorEconomicoCrawler(Crawler):
             output["month"] = month
             output["year"] = year
             return output if to_pandas else output.to_dict("records")
-        except:
-            raise Exception(
+        except Exception as e:
+            raise exceptions.NotFoundException(
                 f"[ValorEconomico] No table found for the given month and year: {month}/{year}"
-            )
+            ) from e
 
     def get_wallets_from_institutions_by_month(
         self, month: int, year: int, to_pandas: bool = True, enable_cache: bool = True

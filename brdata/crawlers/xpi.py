@@ -4,6 +4,14 @@ from brdata.core import exceptions
 
 
 class XPICrawler(Crawler):
+    """Crawler for XP Investimentos.
+
+    Examples:
+        >>> import brdata
+        >>> crawler = brdata.XPICrawler()
+        >>> crawler.get_analysis("PETR4")
+    """
+
     def __init__(self):
         super().__init__("https://conteudos.xpi.com.br/")
 
@@ -59,6 +67,19 @@ class XPICrawler(Crawler):
     def get_analysis(
         self, code: str, to_pandas: bool = True, enable_cache: bool = True, **kwargs
     ) -> pd.Series:
+        """Get stock analysis from XP Investimentos.
+
+        Args:
+            code (str): Stock code.
+            to_pandas (bool, optional): Whether to return a pandas.Series or a dict. Defaults to True.
+            enable_cache (bool, optional): Whether to enable cache. Defaults to True.
+
+        Raises:
+            exceptions.NotFoundException: Stock not found.
+
+        Returns:
+            pd.Series: Stock analysis.
+        """
         try:
             page = super().get_page_soup(
                 path=f"/acoes/{code.lower()}", enable_cache=enable_cache, **kwargs
@@ -69,6 +90,5 @@ class XPICrawler(Crawler):
         output = self._analysis_page_to_pandas(page)
         if output is None:
             raise exceptions.NotFoundException(f"[XPI] Stock {code} not found.")
-        
-        return output if to_pandas else output.to_dict()
 
+        return output if to_pandas else output.to_dict()

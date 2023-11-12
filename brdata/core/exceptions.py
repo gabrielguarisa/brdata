@@ -12,6 +12,8 @@ class RequestException(BaseException):
     ):
         super().__init__(message, *args, **kwargs)
 
+
 class NotFoundException(BaseException):
     """Exception raised when some resource is not founds."""
+
     pass
