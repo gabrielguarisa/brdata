@@ -5,7 +5,7 @@ on:
     types: [ published ]
 
 jobs:
-  publish-service-client-package:
+  publish-release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -13,5 +13,7 @@ jobs:
       - name: Publish PyPi package
         uses: code-specialist/pypi-poetry-publish@v1
         with:
+          PYTHON_VERSION: "3.11"
           ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_REGISTRY_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+          BRANCH: main
