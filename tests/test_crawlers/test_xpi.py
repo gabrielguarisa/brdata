@@ -6,7 +6,7 @@ import pandas as pd
 @pytest.mark.online
 def test_xpi_crawler():
     crawler = brdata.XPICrawler()
-    analysis = crawler.get_analysis("petr3")
+    analysis = crawler.get_analysis("petr3", enable_cache=False)
     assert analysis is not None
     assert isinstance(analysis, pd.Series)
 

@@ -16,7 +16,7 @@ class ValorEconomicoCrawler(Crawler):
     crawler = brdata.ValorEconomicoCrawler()
     crawler.get_recommended_wallet_by_month(1, 2022)
     ```
-    
+
     """
 
     def __init__(self):

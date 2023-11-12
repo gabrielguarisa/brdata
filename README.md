@@ -2,7 +2,7 @@
   <a href="https://github.com/gabrielguarisa/brdata"><img src="https://raw.githubusercontent.com/gabrielguarisa/brdata/0bd34000bf29bd5b93aee011f368bc0385680c58/logo.png?token=GHSAT0AAAAAABPPKYT7BQBOVDJG3NYYQKNOYQ5JIZA" alt="brdata"></a>
 </p>
 <p align="center">
-    <em>Fontes de dados do mercado financeiro brasileiro</em>
+    <em>Brazilian financial market data sources</em>
 </p>
 
 <div align="center">

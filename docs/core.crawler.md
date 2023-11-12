@@ -11,7 +11,7 @@
 
 ---
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/core/crawler.py#L12"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/core/crawler.py#L10"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `Crawler`
 Base class for crawlers. 
@@ -24,7 +24,7 @@ If you want to create a new crawler, you should inherit from this class. It prov
  
  - <b>`url`</b> (str):  Base url for the crawler. 
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/core/crawler.py#L21"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/core/crawler.py#L20"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -41,7 +41,7 @@ __init__(url: str)
 
 ---
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/core/crawler.py#L57"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/core/crawler.py#L56"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_page`
 
@@ -53,7 +53,7 @@ Get a page from a given url. This is just a wrapper around `get_response` method
 
 ---
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/core/crawler.py#L61"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/core/crawler.py#L60"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_page_soup`
 
@@ -69,7 +69,7 @@ Get a BeautifulSoup object from a given url. This is just a wrapper around `get_
 
 ---
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/core/crawler.py#L37"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/core/crawler.py#L36"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_response`
 
@@ -95,7 +95,7 @@ Get a response from a given url.
 
 ---
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/core/crawler.py#L24"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/core/crawler.py#L23"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `join_url`
 

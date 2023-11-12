@@ -1,5 +1,3 @@
-import typing
-
 from urllib.parse import urljoin
 
 import bs4
@@ -11,13 +9,14 @@ import requests
 
 class Crawler(Hashable):
     """Base class for crawlers.
-    
+
     If you want to create a new crawler, you should inherit from this class.
     It provides some useful methods for crawling.
 
     Args:
         url (str): Base url for the crawler.
     """
+
     def __init__(self, url: str):
         self.url = url
 
@@ -43,7 +42,7 @@ class Crawler(Hashable):
             url (str, optional): Url to get response from. Defaults to None.
             path (str, optional): Path to join with base url. Defaults to str.
             kwargs: Keyword arguments to pass to `requests.get`.
-            
+
         Returns:
             requests.Response: Response from the given url.
         """

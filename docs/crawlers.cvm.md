@@ -30,7 +30,7 @@ crawler = brdata.CVMCrawler()
 crawler.get_documents("DFP", 2018, 2020)
 ``` 
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/cvm.py#L21"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/cvm.py#L22"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -47,7 +47,7 @@ __init__()
 
 ---
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/cvm.py#L85"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/cvm.py#L86"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_documents`
 
@@ -87,7 +87,7 @@ Get all documents for a given period.
 
 ---
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/cvm.py#L42"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/cvm.py#L43"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_documents_by_year`
 

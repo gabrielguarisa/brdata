@@ -8,7 +8,7 @@ VALID_PREFIXES = ["DFP", "FCA", "FRE", "IPE", "ITR"]
 
 class CVMCrawler(Crawler):
     """Crawler for CVM data.
-    
+
     Example:
 
     ```python
@@ -16,8 +16,9 @@ class CVMCrawler(Crawler):
     crawler = brdata.CVMCrawler()
     crawler.get_documents("DFP", 2018, 2020)
     ```
-    
+
     """
+
     def __init__(self):
         super().__init__("http://dados.cvm.gov.br/dados/")
 
@@ -41,7 +42,7 @@ class CVMCrawler(Crawler):
 
     def get_documents_by_year(self, prefix: str, year: str, enable_cache: bool = True):
         """Get all documents for a given year.
-        
+
         Args:
             prefix (str): One of the valid prefixes. See `VALID_PREFIXES`.
             year (str): Year to get documents from.
@@ -86,7 +87,7 @@ class CVMCrawler(Crawler):
         self, prefix: str, start_year: str, end_year: str, enable_cache: bool = True
     ):
         """Get all documents for a given period.
-        
+
         Args:
             prefix (str): One of the valid prefixes. See `VALID_PREFIXES`.
             start_year (str): Year to start getting documents from.
