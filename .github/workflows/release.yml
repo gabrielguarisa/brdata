@@ -8,6 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3.1.0
+      
+      - name: Remove git and workflow files
+        run: |
+          rm -rf .git
+          rm -rf .github
+
       - name: Build and publish to pypi
         uses: JRubics/poetry-publish@v1.17
         with:
