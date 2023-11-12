@@ -22,7 +22,7 @@ pip install brasil-data
 
 ## Usage
 
-The documentation is available in the [docs](https://github.com/gabrielguarisa/brdata/tree/main/docs) folder.
+The documentation is available in the [docs folder](https://github.com/gabrielguarisa/brdata/tree/main/docs) or in the [docs website](https://gabrielguarisa.github.io/brdata/).
 
 ## How to contribute
 
