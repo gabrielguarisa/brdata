@@ -9,10 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3.1.0
       
-      - name: Remove git and workflow files
+      - name: Safe directory
         run: |
-          rm -rf .git
-          rm -rf .github
+        git config --global --add safe.directory "*"
 
       - name: Build and publish to pypi
         uses: JRubics/poetry-publish@v1.17
