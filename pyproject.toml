@@ -27,6 +27,8 @@ pytest = ">=7.4.3"
 pytest-cov = "^4.1.0"
 ipykernel = "^6.26.0"
 lazydocs = "^0.4.8"
+mkdocs = "^1.5.3"
+mkdocs-awesome-pages-plugin = "^2.9.2"
 
 [tool.black]
 # https://github.com/psf/black

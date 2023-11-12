@@ -1,0 +1,16 @@
+site_name: brdata
+site_url: https://gabrielguarisa.github.io/brdata
+site_author: Gabriel Guarisa
+
+# Repository
+repo_name: brdata
+repo_url: https://github.com/gabrielguarisa/brdata
+edit_uri: edit/main/docs
+docs_dir: docs
+
+plugins:
+    - awesome-pages
+    - search
+
+theme:
+  name: readthedocs
