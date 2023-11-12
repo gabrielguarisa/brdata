@@ -7,9 +7,13 @@ class XPICrawler(Crawler):
     """Crawler for XP Investimentos.
 
     Examples:
-        >>> import brdata
-        >>> crawler = brdata.XPICrawler()
-        >>> crawler.get_analysis("PETR4")
+
+    ```python
+    import brdata
+    crawler = brdata.XPICrawler()
+    crawler.get_analysis("PETR4")
+    ```
+
     """
 
     def __init__(self):

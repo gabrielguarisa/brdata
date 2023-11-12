@@ -19,12 +19,15 @@ Crawler for XP Investimentos.
 
 
 **Examples:**
- ``` import brdata```
-     >>> crawler = brdata.XPICrawler()
-     >>> crawler.get_analysis("PETR4")
+ 
 
+```python
+import brdata
+crawler = brdata.XPICrawler()
+crawler.get_analysis("PETR4")
+``` 
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/xpi.py#L15"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/xpi.py#L19"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -41,7 +44,7 @@ __init__()
 
 ---
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/xpi.py#L67"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/xpi.py#L71"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_analysis`
 

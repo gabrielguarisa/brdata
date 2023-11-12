@@ -27,7 +27,7 @@ Crawler for CVM data.
 ```python
 import brdata
 crawler = brdata.CVMCrawler()
-crawler.get_documents("DFP", 2010, 2020)
+crawler.get_documents("DFP", 2018, 2020)
 ``` 
 
 <a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/cvm.py#L21"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>

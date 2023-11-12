@@ -14,7 +14,7 @@ class CVMCrawler(Crawler):
     ```python
     import brdata
     crawler = brdata.CVMCrawler()
-    crawler.get_documents("DFP", 2010, 2020)
+    crawler.get_documents("DFP", 2018, 2020)
     ```
     
     """

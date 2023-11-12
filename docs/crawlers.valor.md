@@ -19,12 +19,15 @@ Crawler for Valor Economico.
 
 
 **Examples:**
- ``` import brdata```
-     >>> crawler = brdata.ValorEconomicoCrawler()
-     >>> crawler.get_recommended_wallet_by_month(1, 2022)
+ 
 
+```python
+import brdata
+crawler = brdata.ValorEconomicoCrawler()
+crawler.get_recommended_wallet_by_month(1, 2022)
+``` 
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/valor.py#L19"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/valor.py#L22"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -41,7 +44,7 @@ __init__()
 
 ---
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/valor.py#L24"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/valor.py#L27"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_page_soup`
 
@@ -60,7 +63,7 @@ get_page_soup(
 
 ---
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/valor.py#L156"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/valor.py#L159"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_recommended_wallet`
 
@@ -92,7 +95,7 @@ Get recommended wallet.
 
 ---
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/valor.py#L69"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/valor.py#L72"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_recommended_wallet_by_month`
 
@@ -124,7 +127,7 @@ Get recommended wallet for a given month and year.
 
 ---
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/valor.py#L182"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/valor.py#L185"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_wallets_from_institutions`
 
@@ -156,7 +159,7 @@ Get wallets from institutions.
 
 ---
 
-<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/valor.py#L100"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/gabrielguarisa/brdata/blob/main/brdata/crawlers/valor.py#L103"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_wallets_from_institutions_by_month`
 

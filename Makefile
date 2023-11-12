@@ -24,7 +24,7 @@ tests-online:
 
 .PHONY: docs
 docs:
-	poetry run lazydocs --src-base-url="https://github.com/gabrielguarisa/brdata/blob/main/" brdata
+	poetry run lazydocs --src-base-url="https://github.com/gabrielguarisa/brdata/blob/main/" brdata --overview-file="README.md"
 
 .PHONY: clear-docs
 clear-docs:
