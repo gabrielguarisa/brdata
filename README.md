@@ -26,4 +26,4 @@ The documentation is available in the [docs](https://github.com/gabrielguarisa/b
 
 ## How to contribute
 
-Para contribuir com o projeto, consulte o [guia de contribuição](https://github.com/gabrielguarisa/brdata/blob/main/CONTRIBUTING.md).
+To contribute, please read the [CONTRIBUTING.md](https://github.com/gabrielguarisa/brdata/blob/main/CONTRIBUTING.md) file.
