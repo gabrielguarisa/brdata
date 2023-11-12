@@ -1,20 +1,17 @@
-name: Python package
-on:
-  push:
-    tags:
-      - "v*.*.*"
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3.1.0
-      
-      - name: Safe directory
-        run: |
-          git config --global --add safe.directory "*"
+name: Build and publish python package
 
-      - name: Build and publish to pypi
-        uses: JRubics/poetry-publish@v1.17
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  publish-service-client-package:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Publish PyPi package
+        uses: code-specialist/pypi-poetry-publish@v1
         with:
-          repository_username: ${{ secrets.PYPI_USERNAME }}
-          repository_password: ${{ secrets.PYPI_PASSWORD }}
+          ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_REGISTRY_PASSWORD: ${{ secrets.PYPI_TOKEN }}
