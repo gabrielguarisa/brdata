@@ -7,7 +7,7 @@ user_agent_rotator = UserAgent()
 
 
 def new_user_agent() -> str:
-    """Retorna um novo User-Agent."""
+    """Returns a new random user agent."""
     return user_agent_rotator.get_random_user_agent()
 
 
@@ -18,12 +18,14 @@ def new_user_agent() -> str:
 def get_response(
     url: str, max_retries: int = 5, timeout: int = 10, verify: bool = True
 ) -> requests.Response:
-    """Retorna uma resposta de uma requisição HTTP.
+    """Returns a response from a given url.
 
     Args:
-        url (str): url da requisição.
-        max_retries (int, optional): número máximo de tentativas. Defaults to 5.
-        timeout (int, optional): tempo máximo de espera da requisição. Defaults to 10.
+        url (str): url to get response from.
+        max_retries (int, optional): Maximum number of retries. Defaults to 5.
+        timeout (int, optional): Timeout in seconds. Defaults to 10.
+        verify (bool, optional): Whether to verify SSL certificate. Defaults to True.
+        enable_cache (bool, optional): Whether to use cache or not. Defaults to True.
     """
     i = 0
     while True:

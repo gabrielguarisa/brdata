@@ -14,12 +14,16 @@
 
 </div>
 
-## Instalação
+## Installation
 
 ```shell
 pip install brasil-data
 ```
 
-## Contribuindo com o projeto
+## Usage
+
+The documentation is available in the [docs](/docs/) folder.
+
+## How to contribute
 
 Para contribuir com o projeto, consulte o [guia de contribuição](https://github.com/gabrielguarisa/brdata/blob/main/CONTRIBUTING.md).

@@ -21,3 +21,11 @@ tests-offline:
 .PHONY: tests-online
 tests-online:
 	poetry run pytest -m online
+
+.PHONY: docs
+docs:
+	poetry run lazydocs --src-base-url="https://github.com/gabrielguarisa/brdata/blob/main/" brdata
+
+.PHONY: clear-docs
+clear-docs:
+	rm -rf docs

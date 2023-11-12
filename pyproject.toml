@@ -31,6 +31,7 @@ ruff = "^0.1.5"
 pytest = "^6.2.4"
 pytest-cov = "^3.0.0"
 ipykernel = "^6.26.0"
+lazydocs = "^0.4.8"
 
 [tool.black]
 # https://github.com/psf/black
