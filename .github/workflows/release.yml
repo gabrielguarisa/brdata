@@ -15,6 +15,7 @@ jobs:
         with:
           PYTHON_VERSION: "3.11"
           POETRY_VERSION: "1.6.1"
+          POETRY_CORE_VERSION: "1.7.0"
           ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_REGISTRY_PASSWORD: ${{ secrets.PYPI_TOKEN }}
           BRANCH: main
