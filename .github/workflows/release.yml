@@ -11,7 +11,7 @@ jobs:
       
       - name: Safe directory
         run: |
-        git config --global --add safe.directory "*"
+          git config --global --add safe.directory "*"
 
       - name: Build and publish to pypi
         uses: JRubics/poetry-publish@v1.17
