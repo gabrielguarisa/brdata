@@ -9,7 +9,7 @@ authors = ["Gabriel Guarisa <gabrielguarisa@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/gabrielguarisa/brdata"
-homepage = "https://github.com/gabrielguarisa/brdata"
+homepage = "gabrielguarisa.github.io/brdata/"
 keywords = ["data", "dados", "brasil", "br", "brazil", "finance", "financeiro", "mercado"]
 
 [tool.poetry.dependencies]
