@@ -29,6 +29,7 @@ ipykernel = "^6.26.0"
 lazydocs = "^0.4.8"
 mkdocs = "^1.5.3"
 mkdocs-awesome-pages-plugin = "^2.9.2"
+mkdocs-material = "^9.4.8"
 
 [tool.black]
 # https://github.com/psf/black
