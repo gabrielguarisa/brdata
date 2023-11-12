@@ -56,6 +56,7 @@ class CVMCrawler(Crawler):
             dict: Dictionary of pandas.DataFrame with the documents.
         """
         year = str(year)
+        prefix = prefix.upper()
         links = self._get_table_links(prefix, enable_cache=enable_cache)
 
         if year not in links:
