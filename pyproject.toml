@@ -3,7 +3,7 @@ name = "brasil-data"
 packages = [
     {include = "brdata"}
 ]
-version = "1.0.0"
+version = "v1.0.1"
 description = "Brazilian financial market data sources"
 authors = ["Gabriel Guarisa <gabrielguarisa@gmail.com>"]
 license = "MIT"
