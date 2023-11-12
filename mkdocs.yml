@@ -13,4 +13,4 @@ plugins:
     - search
 
 theme:
-  name: readthedocs
+  name: material

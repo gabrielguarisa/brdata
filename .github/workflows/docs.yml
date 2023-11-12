@@ -1,0 +1,18 @@
+name: docs
+on:
+  push:
+    branches:
+      - main
+      
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - run: |
+          pip install lazydocs mkdocs mkdocs-awesome-pages-plugin mkdocs-material
+      - run: ./build-docs.sh
+      - run: mkdocs gh-deploy --force
