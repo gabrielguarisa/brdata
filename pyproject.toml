@@ -1,87 +1,18 @@
-[tool.poetry]
-name = "brasil-data"
-packages = [
-    {include = "brdata"}
-]
-version = "v1.0.1"
-description = "Brazilian financial market data sources"
-authors = ["Gabriel Guarisa <gabrielguarisa@gmail.com>"]
-license = "MIT"
+[project]
+name = "brdata"
+version = "0.1.0"
+description = "Add your description here"
 readme = "README.md"
-repository = "https://github.com/gabrielguarisa/brdata"
-homepage = "gabrielguarisa.github.io/brdata/"
-keywords = ["data", "dados", "brasil", "br", "brazil", "finance", "financeiro", "mercado"]
-
-[tool.poetry.dependencies]
-python = ">=3.9,<3.13"
-pandas = ">=1.5.3"
-html5lib = ">=1.1"
-requests = ">=2.31.0"
-random-user-agent = "^1.0.1"
-beautifulsoup4 = ">=4.11.2"
-cache-decorator = "^2.1.15"
-
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.1.5"
-pytest = ">=7.4.3"
-pytest-cov = "^4.1.0"
-ipykernel = "^6.26.0"
-lazydocs = "^0.4.8"
-mkdocs = "^1.5.3"
-mkdocs-awesome-pages-plugin = "^2.9.2"
-mkdocs-material = "^9.4.8"
-
-[tool.black]
-# https://github.com/psf/black
-target-version = ["py37"]
-line-length = 88
-color = true
-
-exclude = '''
-/(
-    \.git
-    | \.hg
-    | \.mypy_cache
-    | \.tox
-    | \.venv
-    | _build
-    | buck-out
-    | build
-    | dist
-    | env
-    | venv
-)/
-'''
-
-[tool.isort]
-# https://github.com/timothycrosley/isort/
-py_version = 37
-line_length = 88
-
-known_typing = [
-  "typing",
-  "types",
-  "typing_extensions",
-  "mypy",
-  "mypy_extensions",
+authors = [
+    { name = "guarisadavi", email = "guarisadavi@gmail.com" }
 ]
-sections = [
-  "FUTURE",
-  "TYPING",
-  "STDLIB",
-  "THIRDPARTY",
-  "FIRSTPARTY",
-  "LOCALFOLDER",
+requires-python = ">=3.12"
+dependencies = [
+    "bs4>=0.0.2",
+    "requests>=2.33.1",
+    "typing>=3.10.0.0",
 ]
-include_trailing_comma = true
-profile = "black"
-multi_line_output = 3
-indent = 4
-color_output = true
-
-[tool.pytest.ini_options]
-addopts = "-p no:warnings --cov-report term-missing --cov=brdata"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.11.1,<0.12.0"]
+build-backend = "uv_build"
