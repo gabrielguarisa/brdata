@@ -5,84 +5,83 @@ from datetime import date
 import requests
 import os
 
-def crawler_cvm_data(url, year):
-    """
-    Retorna os arquivos zip da página da cvm a partir de um filtro
-    """
-    try:
-        r = requests.get(url)
-        r.raise_for_status()
-        soup = BeautifulSoup(r.text, "html.parser")
-
-        for link in soup.find_all("a", href=True):
-            if ".zip" and year in link.text:
-                link_zip = link["href"]
-                break
-
-    except requests.exceptions.RequestException as e:
-        print(f"Connection Error {url}: {e}")
-
-    return link_zip
-
-
-def download(year: int,
-            dataset: Literal["ITR", "DFP", "VLMO", "FRE", "FCA"],  
-            path: str = "data/landing/cvm", 
-            overwrite: bool = False):
-    
-    # zip_url extract
-    url = f"https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/{dataset}/DADOS/"
-    zip = crawler_cvm_data(url, str(year))
-    full_url = url + zip
-
-    # path setup
-    dataset_path = os.path.join(path, dataset.lower())
-    os.makedirs(dataset_path, exist_ok=True)
-    full_path = os.path.join(dataset_path, zip)
-
-    # file check
-    if overwrite == False:
-        exist = os.path.isfile(full_path)
-        if exist:
-            return zip
-
-    # download
-    r = requests.get(full_url, stream=True)
-    r.raise_for_status()
-
-    with open(full_path, "wb") as f:
-        f.write(r.content)
-
-    return zip
-
-def downloads(dataset: Literal["ITR", "DFP", "VLMO", "FRE", "FCA"], 
-              start_year: int | None = None, 
-              last_year: int | None = None,
-              skip_exceptions: bool = True):
-    
-    if start_year is None and last_year is None:
-        rules = {
+DEFAULT_RULES = {
             "ITR": (2011, 2025),
             "VLMO": (2018, 2026),
             "DFP": (2010, 2025),
             "FRE": (2010, 2026),
             "FCA": (2010, 2026)
         }
-        start_year, last_year = rules.get(dataset, (start_year, last_year))
+
+def crawler(url, year):
+    """Returns the zip files from the CVM page based on a filter"""
+    try:
+        r = requests.get(url)
+        r.raise_for_status()
+        soup = BeautifulSoup(r.text, "html.parser")
+
+        for link in soup.find_all("a", href=True):
+            href = link["href"]
+            if href.endswith(".zip") and year in link.text:
+                return href
+    
+    except requests.exceptions.RequestException as e:
+        print(f"Connection Error {url}: {e}")
+    return None
+
+
+def dataset(year: int,
+            dataset: Literal["ITR", "DFP", "VLMO", "FRE", "FCA"],  
+            path: str = "data/landing/cvm", 
+            overwrite: bool = False):
+    """Download a dataset from the CVM based on your year"""
+    try:
+        # zip_url extract
+        url = f"https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/{dataset}/DADOS/"
+        zip = crawler(url, str(year))
+        if zip is None:
+            raise Exception("File not found!")
+        
+        full_url = url + zip
+
+        # path setup
+        dataset_path = os.path.join(path, dataset.lower())
+        os.makedirs(dataset_path, exist_ok=True)
+        full_path = os.path.join(dataset_path, zip)
+
+        # file check
+        if not overwrite:
+            exist = os.path.isfile(full_path)
+            if exist:
+                return zip
+
+        # download
+        r = requests.get(full_url, stream=True)
+        r.raise_for_status()
+
+        with open(full_path, "wb") as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                f.write(chunk)
+
+        return zip
+    
+    except Exception as e:
+        raise Exception(f"Download Failure ({dataset} {year})") from None
+
+def datasets_in_range(dataset: Literal["ITR", "DFP", "VLMO", "FRE", "FCA"], 
+              start_year: int | None = None, 
+              last_year: int | None = None,
+              skip_exceptions: bool = True):
+    """Download CVM datasets within a range of years"""
+    if start_year is None and last_year is None:
+        start_year, last_year = DEFAULT_RULES.get(dataset, (start_year, last_year))
     elif last_year is None:
         last_year = date.today().year
 
     for year in tqdm(range(start_year, last_year+1), desc=f"Download: "):
         try:
-            download(year=str(year), dataset=dataset)
-        except UnboundLocalError:
-            msg = f"Year {year} is invalid to {dataset}"
-            if not skip_exceptions:
-                raise UnboundLocalError(msg)
-            tqdm.write(msg)
-        
+            dataset(year=str(year), dataset=dataset)
         except Exception as e:
-            msg = f"Unexpected Error: {e}"
             if not skip_exceptions:
                 raise e
-            tqdm.write(msg)
+            tqdm.write(str(e))
