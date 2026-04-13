@@ -3,15 +3,16 @@ import os, time
 import base64
 import json
 from tqdm import tqdm
-from typing import Literal
+from typing import Literal, get_args
 
 DEFAULT_PATH = "data/landing/b3"
-DEFAULT_INDEX = ["IBOV", "IBBR", "IBBC", "IBBE", "IBEP",
+B3Index = Literal["IBOV", "IBBR", "IBBC", "IBBE", "IBEP",
                 "IBEW", "IBEE", "IBSD", "IBHB", "IBLV",
                 "IDIV", "IBXX", "IBXL", "IBRA", "AGFS",
                 "IFNC", "BDRX", "ICON", "IEEX", "IFIX",
                 "IFIL", "IMAT", "INDX", "IMOB", "MLCX",
                 "SMLL", "UTIL", "IVBX"]
+VALID_INDEXES = set(get_args(B3Index))
 
 def params_to_base64(params):
     """Converts search parameters to base64"""
@@ -20,12 +21,7 @@ def params_to_base64(params):
     string_base64 = enconded_bytes_base64.decode("ascii")
     return string_base64
 
-def download_index(index: Literal["IBOV", "IBBR", "IBBC", "IBBE", "IBEP",
-                "IBEW", "IBEE", "IBSD", "IBHB", "IBLV",
-                "IDIV", "IBXX", "IBXL", "IBRA", "AGFS",
-                "IFNC", "BDRX", "ICON", "IEEX", "IFIX",
-                "IFIL", "IMAT", "INDX", "IMOB", "MLCX",
-                "SMLL", "UTIL", "IVBX"], 
+def download_index(index: B3Index, 
                 path: str = DEFAULT_PATH,
                 overwrite: bool = False):
     """Extracts JSON files from B3 indexes"""
@@ -87,7 +83,7 @@ def download_indexes(index_list: list[str],
                      overwrite: bool = False):
     """Extracts JSON files from a list of B3 indices"""
     for i in tqdm(index_list, desc="Download B3"):
-        if i not in DEFAULT_INDEX:
+        if i not in VALID_INDEXES:
             tqdm.write(f"Index {i} Not Found")
             continue
         try:
