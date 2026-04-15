@@ -31,13 +31,13 @@ def crawler(url, year):
 
 
 def dataset(year: int,
-            dataset: Literal["ITR", "DFP", "VLMO", "FRE", "FCA"],  
+            dataset_type: Literal["ITR", "DFP", "VLMO", "FRE", "FCA"],  
             path: str = "data/landing/cvm", 
             overwrite: bool = False):
     """Download a dataset from the CVM based on your year"""
     try:
         # zip_url extract
-        url = f"https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/{dataset}/DADOS/"
+        url = f"https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/{dataset_type}/DADOS/"
         zip = crawler(url, str(year))
         if zip is None:
             raise Exception("File not found!")
@@ -45,7 +45,7 @@ def dataset(year: int,
         full_url = url + zip
 
         # path setup
-        dataset_path = os.path.join(path, dataset.lower())
+        dataset_path = os.path.join(path, dataset_type.lower())
         os.makedirs(dataset_path, exist_ok=True)
         full_path = os.path.join(dataset_path, zip)
 
@@ -66,21 +66,21 @@ def dataset(year: int,
         return zip
     
     except Exception as e:
-        raise Exception(f"Download Failure ({dataset} {year})") from None
+        raise Exception(f"Download Failure ({dataset_type} {year})") from None
 
-def datasets_in_range(dataset: Literal["ITR", "DFP", "VLMO", "FRE", "FCA"], 
+def datasets_in_range(dataset_type: Literal["ITR", "DFP", "VLMO", "FRE", "FCA"], 
               start_year: int | None = None, 
               last_year: int | None = None,
               skip_exceptions: bool = True):
     """Download CVM datasets within a range of years"""
     if start_year is None and last_year is None:
-        start_year, last_year = DEFAULT_RULES.get(dataset, (start_year, last_year))
+        start_year, last_year = DEFAULT_RULES.get(dataset_type, (start_year, last_year))
     elif last_year is None:
         last_year = date.today().year
 
     for year in tqdm(range(start_year, last_year+1), desc=f"Download: "):
         try:
-            dataset(year=str(year), dataset=dataset)
+            dataset(year=str(year), dataset_type=dataset_type)
         except Exception as e:
             if not skip_exceptions:
                 raise e
