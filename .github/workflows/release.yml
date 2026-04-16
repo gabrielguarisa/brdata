@@ -1,0 +1,29 @@
+name: Build and publish python package
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  publish-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install "3.11"
+
+      - name: Build package
+        run: uv build
+
+      - name: Publish package
+        run: uv publish --token ${{ secrets.PYPI_TOKEN }}
