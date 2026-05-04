@@ -2,28 +2,43 @@
   <a href="https://github.com/gabrielguarisa/brdata"><img src="https://raw.githubusercontent.com/gabrielguarisa/brdata/0bd34000bf29bd5b93aee011f368bc0385680c58/logo.png?token=GHSAT0AAAAAABPPKYT7BQBOVDJG3NYYQKNOYQ5JIZA" alt="brdata"></a>
 </p>
 <p align="center">
-    <em>Brazilian financial market data sources</em>
+    <em>Fontes de dados do mercado financeiro brasileiro</em>
 </p>
 
-<div align="center">
-
-[![Package version](https://img.shields.io/pypi/v/brasil-data?color=%2334D058&label=pypi%20package)](https://pypi.org/project/brasil-data/)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Semantic Versions](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--versions-e10079.svg)](https://github.com/gabrielguarisa/brdata/releases)
-[![License](https://img.shields.io/github/license/gabrielguarisa/brdata)](https://github.com/gabrielguarisa/brdata/blob/main/LICENSE)
-
-</div>
-
-## Installation
-
+## Instalação
 ```shell
 pip install brasil-data
 ```
 
-## Usage
+## Como usar
+Após a instalação você pode importar a biblioteca diretamente para seu código:
+```Python
+import brdata
+```
 
-The documentation is available in the [docs folder](https://github.com/gabrielguarisa/brdata/tree/main/docs) or in the [docs website](https://gabrielguarisa.github.io/brdata/).
+### O que *brdata* faz?
+- `brdata.b3`: Extrai índices da B3.
+	- `b3.download_index(valid_index)`: Baixa apenas um índice.
+	- `b3.download_indexes(index_list: list[str])`: Baixa uma lista de índices, caso sejam válidos.
 
-## How to contribute
+- `brdata.cvm`: Download de formulários da CVM `(DFP, ITR, FRE, FCA, VLMO)` .
+	- `cvm.dataset(year, dataset_type)`: Baixa um dataset baseado no ano.
+	- `cvm.datasets_in_range(dataset_type, start_year, last_year)`: Baixa uma série de datasets dentro de um range de anos.
 
-To contribute, please read the [CONTRIBUTING.md](https://github.com/gabrielguarisa/brdata/blob/main/CONTRIBUTING.md) file.
+## Colaboradores
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/gabrielguarisa">
+        <img src="https://github.com/gabrielguarisa.png" width="100px;" alt="Foto do Gabriel"/><br>
+        <sub><b>Gabriel Guarisa</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/daviguarisa">
+        <img src="https://github.com/daviguarisa.png" width="100px;" alt="Foto do Davi"/><br>
+        <sub><b>Davi Guarisa</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
