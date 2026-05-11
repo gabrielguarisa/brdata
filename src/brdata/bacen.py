@@ -49,6 +49,9 @@ def boletim_focus(
         cod: CodigosFocus,
         path: str = "data/landing/bacen/boletimfocus"
         ):
+    """
+    Collects information on market expectations from the Brazilian central bank.
+    """
     url = f"https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/{cod}?$format=json"
     os.makedirs(path, exist_ok=True)
     filename = f"boletim_focus_{cod}.json"
