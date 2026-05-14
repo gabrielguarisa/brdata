@@ -76,7 +76,9 @@ def test_datasets_in_range_stop_on_exception(mocker):
     mocker.patch("brdata.cvm.tqdm", lambda x, **kwargs: x)
 
     with pytest.raises(Exception, match="Fatal Error"):
-        cvm.datasets_in_range("DFP", start_year=2020, last_year=2022, skip_exceptions=False)
+        cvm.datasets_in_range(
+            "DFP", start_year=2020, last_year=2022, skip_exceptions=False
+        )
 
 
 # 8. Teste de Dataset - Comportamento do Overwrite

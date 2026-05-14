@@ -18,8 +18,8 @@ import brdata
 
 ### O que *brdata* faz?
 - `brdata.b3`: Extrai índices da B3.
-	- `b3.download_index(valid_index)`: Baixa apenas um índice.
-	- `b3.download_indexes(index_list: list[str])`: Baixa uma lista de índices, caso sejam válidos.
+	- `b3.download_index(valid_index, path=None)`: Retorna os dados de um índice ou salva o JSON quando `path` é informado.
+	- `b3.download_indexes(index_list: list[str], path=None)`: Retorna os dados de uma lista de índices válidos ou salva os JSONs quando `path` é informado.
 
 - `brdata.cvm`: Download de formulários da CVM `(DFP, ITR, FRE, FCA, VLMO)` .
 	- `cvm.dataset(year, dataset_type)`: Baixa um dataset baseado no ano.

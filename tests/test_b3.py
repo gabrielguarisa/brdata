@@ -1,3 +1,5 @@
+from enum import StrEnum
+
 import pytest
 from brdata import b3
 
@@ -14,6 +16,12 @@ def test_params_to_base64(params, expected):
     assert b3.params_to_base64(params) == expected
 
 
+def test_b3_index_is_str_enum():
+    assert issubclass(b3.B3Index, StrEnum)
+    assert b3.B3Index.IBOV.value == "IBOV"
+    assert b3.B3Index.IBOV == "IBOV"
+
+
 # 2. Teste de Sucesso - Download Simples
 def test_download_index_sucess(mocker):
     # Mock do requests para retornar JSON da B3
@@ -28,14 +36,17 @@ def test_download_index_sucess(mocker):
     mocker.patch("brdata.b3.requests.get", return_value=mock_response)
 
     # Mocks de sistema de arquivos
-    mocker.patch("brdata.b3.os.makedirs")
-    mocker.patch("brdata.b3.os.path.exists", return_value=False)
+    mock_makedirs = mocker.patch("brdata.b3.os.makedirs")
     mock_open = mocker.patch("builtins.open", mocker.mock_open())
 
-    filename = b3.download_index("IBOV")
+    data = b3.download_index(b3.B3Index.IBOV)
 
-    assert filename == "IBOV_10-01-2026.json"
-    mock_open.assert_called_once()
+    assert data == {
+        "header": {"date": "10/01/2026"},
+        "results": [{"cod": "PETR4", "part": "5.0"}],
+    }
+    mock_makedirs.assert_not_called()
+    mock_open.assert_not_called()
 
 
 # 3. Teste de Paginação - Mesclagem de resultados
@@ -57,37 +68,35 @@ def test_download_index_pagination_merging(mocker):
     }
 
     # Simula duas chamadas sequenciais para o requests.get
-    mock_get = mocker.patch(
-        "brdata.b3.requests.get", side_effect=[resp_pg1, resp_pg2]
-    )
+    mock_get = mocker.patch("brdata.b3.requests.get", side_effect=[resp_pg1, resp_pg2])
     mocker.patch("brdata.b3.os.makedirs")
     mocker.patch("brdata.b3.os.path.exists", return_value=False)
-    mocker.patch(
-        "brdata.b3.time.sleep"
-    )  # Remove espera real para o teste ser rápido
+    mocker.patch("brdata.b3.time.sleep")  # Remove espera real para o teste ser rápido
 
     mock_json_dump = mocker.patch("brdata.b3.json.dump")
     mocker.patch("builtins.open", mocker.mock_open())
 
-    b3.download_index("IBOV")
+    b3.download_index("IBOV", path="data/landing/b3")
 
     assert mock_get.call_count == 2
     dados_finais = mock_json_dump.call_args[0][0]
-    assert len(dados_finais) == 2
-    assert dados_finais[1]["cod"] == "VALE3"
+    assert len(dados_finais["results"]) == 2
+    assert dados_finais["results"][1]["cod"] == "VALE3"
 
 
 # 4. Teste de Validação - Pular índices inválidos
 def test_download_indexes_skips_invalid(mocker):
-    mock_singular = mocker.patch("brdata.b3.download_index")
+    index_data = {"header": {"date": "10/01/2026"}, "results": []}
+    mock_singular = mocker.patch("brdata.b3.download_index", return_value=index_data)
     # Mock do tqdm como MagicMock para suportar tqdm.write()
     mock_tqdm = mocker.patch("brdata.b3.tqdm")
     mock_tqdm.side_effect = lambda x, **kwargs: x
 
     lista_teste = ["IBOV", "MOEDA_FAKE"]
-    b3.download_indexes(lista_teste)
+    result = b3.download_indexes(lista_teste)
 
     # Deve baixar apenas o IBOV
+    assert result == {"IBOV": index_data}
     assert mock_singular.call_count == 1
     mock_tqdm.write.assert_called_once_with("Index MOEDA_FAKE Not Found")
 
@@ -112,11 +121,12 @@ def test_download_index_raises_exception_on_empty_results(mocker):
 def test_download_index_respects_overwrite(mocker):
     mocker.patch("brdata.b3.os.path.exists", return_value=True)
     mocker.patch("brdata.b3.os.makedirs")
+    mocker.patch("builtins.open", mocker.mock_open(read_data='{"cached": true}'))
 
     mock_response = mocker.Mock()
     mock_response.json.return_value = {"header": {"date": "15/04/2026"}}
     mocker.patch("brdata.b3.requests.get", return_value=mock_response)
 
-    result = b3.download_index("IBOV", overwrite=False)
+    result = b3.download_index("IBOV", path="data/landing/b3", overwrite=False)
 
-    assert result == "IBOV_15-04-2026.json"
+    assert result == {"cached": True}

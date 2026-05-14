@@ -4,40 +4,41 @@ import time
 import base64
 import json
 from tqdm import tqdm
-from typing import Literal, get_args
+from enum import StrEnum
 
-DEFAULT_PATH = "data/landing/b3"
-B3Index = Literal[
-    "IBOV",
-    "IBBR",
-    "IBBC",
-    "IBBE",
-    "IBEP",
-    "IBEW",
-    "IBEE",
-    "IBSD",
-    "IBHB",
-    "IBLV",
-    "IDIV",
-    "IBXX",
-    "IBXL",
-    "IBRA",
-    "AGFS",
-    "IFNC",
-    "BDRX",
-    "ICON",
-    "IEEX",
-    "IFIX",
-    "IFIL",
-    "IMAT",
-    "INDX",
-    "IMOB",
-    "MLCX",
-    "SMLL",
-    "UTIL",
-    "IVBX",
-]
-VALID_INDEXES = set(get_args(B3Index))
+
+class B3Index(StrEnum):
+    IBOV = "IBOV"
+    IBBR = "IBBR"
+    IBBC = "IBBC"
+    IBBE = "IBBE"
+    IBEP = "IBEP"
+    IBEW = "IBEW"
+    IBEE = "IBEE"
+    IBSD = "IBSD"
+    IBHB = "IBHB"
+    IBLV = "IBLV"
+    IDIV = "IDIV"
+    IBXX = "IBXX"
+    IBXL = "IBXL"
+    IBRA = "IBRA"
+    AGFS = "AGFS"
+    IFNC = "IFNC"
+    BDRX = "BDRX"
+    ICON = "ICON"
+    IEEX = "IEEX"
+    IFIX = "IFIX"
+    IFIL = "IFIL"
+    IMAT = "IMAT"
+    INDX = "INDX"
+    IMOB = "IMOB"
+    MLCX = "MLCX"
+    SMLL = "SMLL"
+    UTIL = "UTIL"
+    IVBX = "IVBX"
+
+
+VALID_INDEXES = {index.value for index in B3Index}
 
 
 def params_to_base64(params):
@@ -48,15 +49,17 @@ def params_to_base64(params):
     return string_base64
 
 
-def download_index(index: B3Index, path: str = DEFAULT_PATH, overwrite: bool = False):
+def download_index(
+    index: B3Index | str, path: str | None = None, overwrite: bool = False
+):
     """Extracts JSON files from B3 indexes"""
-    os.makedirs(path, exist_ok=True)
+    if path:
+        os.makedirs(path, exist_ok=True)
 
     every_data = []
     current_page = 1
-    index_date = None
+    header = None
     full_path = None
-    file = None
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
@@ -79,13 +82,15 @@ def download_index(index: B3Index, path: str = DEFAULT_PATH, overwrite: bool = F
             response.raise_for_status()
             data = response.json()
 
-            if index_date is None:
-                index_date = data["header"]["date"].replace("/", "-")
-                file = f"{index}_{index_date}.json"
-                full_path = os.path.join(path, file)
+            if header is None:
+                header = data["header"]
+                index_date = header["date"].replace("/", "-")
 
-                if not overwrite and os.path.exists(full_path):
-                    return file
+                if path:
+                    full_path = os.path.join(path, f"{index}_{index_date}.json")
+                    if not overwrite and os.path.exists(full_path):
+                        with open(full_path, encoding="utf-8") as arquivo:
+                            return json.load(arquivo)
 
             results = data.get("results", [])
             if not results:
@@ -103,24 +108,33 @@ def download_index(index: B3Index, path: str = DEFAULT_PATH, overwrite: bool = F
         except Exception as e:
             raise Exception(f"Index Error {index}: {e}") from None
 
-    if not index_date or not every_data:
+    if not header or not every_data:
         raise Exception(f"Data Not Found for {index}")
 
-    with open(full_path, "w", encoding="utf-8") as arquivo:
-        json.dump(every_data, arquivo, indent=4, ensure_ascii=False)
+    index_data = {"header": header, "results": every_data}
 
-    return file
+    if full_path:
+        with open(full_path, "w", encoding="utf-8") as arquivo:
+            json.dump(index_data, arquivo, indent=4, ensure_ascii=False)
+
+    return index_data
 
 
 def download_indexes(
-    index_list: list[str], path: str = DEFAULT_PATH, overwrite: bool = False
+    index_list: list[B3Index | str], path: str | None = None, overwrite: bool = False
 ):
     """Extracts JSON files from a list of B3 indices"""
+    indexes_data = {}
+
     for i in tqdm(index_list, desc="Download B3"):
         if i not in VALID_INDEXES:
             tqdm.write(f"Index {i} Not Found")
             continue
         try:
-            download_index(index=i, path=path, overwrite=overwrite)
+            indexes_data[str(i)] = download_index(
+                index=i, path=path, overwrite=overwrite
+            )
         except Exception as e:
             tqdm.write(str(e))
+
+    return indexes_data
