@@ -9,6 +9,6 @@ wheels/
 
 # Virtual environments
 .venv
-
+.coverage
 # Directories
 data/
