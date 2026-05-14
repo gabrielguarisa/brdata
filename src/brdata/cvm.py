@@ -6,12 +6,13 @@ import requests
 import os
 
 DEFAULT_RULES = {
-            "ITR": (2011, 2025),
-            "VLMO": (2018, 2026),
-            "DFP": (2010, 2025),
-            "FRE": (2010, 2026),
-            "FCA": (2010, 2026)
-        }
+    "ITR": (2011, 2025),
+    "VLMO": (2018, 2026),
+    "DFP": (2010, 2025),
+    "FRE": (2010, 2026),
+    "FCA": (2010, 2026),
+}
+
 
 def crawler(url, year: int = None):
     """Returns the zip files from the CVM page based on a filter"""
@@ -35,10 +36,12 @@ def crawler(url, year: int = None):
     return None
 
 
-def dataset(year: int,
-            dataset_type: Literal["ITR", "DFP", "VLMO", "FRE", "FCA"],  
-            path: str = "data/landing/cvm", 
-            overwrite: bool = False):
+def dataset(
+    year: int,
+    dataset_type: Literal["ITR", "DFP", "VLMO", "FRE", "FCA"],
+    path: str = "data/landing/cvm",
+    overwrite: bool = False,
+):
     """Download a dataset from the CVM based on your year"""
     try:
         # zip_url extract
@@ -46,7 +49,7 @@ def dataset(year: int,
         zip = crawler(url, str(year))
         if zip is None:
             raise Exception("File not found!")
-        
+
         full_url = url + zip
 
         # path setup
@@ -69,21 +72,24 @@ def dataset(year: int,
                 f.write(chunk)
 
         return zip
-    
-    except Exception as e:
-        raise Exception(f"Download Failure ({dataset_type} {year})") from None
 
-def datasets_in_range(dataset_type: Literal["ITR", "DFP", "VLMO", "FRE", "FCA"], 
-              start_year: int | None = None, 
-              last_year: int | None = None,
-              skip_exceptions: bool = True):
+    except Exception as e:
+        raise Exception(f"Download Failure ({dataset_type} {year})") from e
+
+
+def datasets_in_range(
+    dataset_type: Literal["ITR", "DFP", "VLMO", "FRE", "FCA"],
+    start_year: int | None = None,
+    last_year: int | None = None,
+    skip_exceptions: bool = True,
+):
     """Download CVM datasets within a range of years"""
     if start_year is None and last_year is None:
         start_year, last_year = DEFAULT_RULES.get(dataset_type, (start_year, last_year))
     elif last_year is None:
         last_year = date.today().year
 
-    for year in tqdm(range(start_year, last_year+1), desc=f"Download: "):
+    for year in tqdm(range(start_year, last_year + 1), desc="Download: "):
         try:
             dataset(year=str(year), dataset_type=dataset_type)
         except Exception as e:

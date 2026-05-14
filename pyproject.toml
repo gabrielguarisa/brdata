@@ -1,6 +1,6 @@
 [project]
 name = "brasil-data"
-version = "2.1.0"
+version = "2.2.0"
 description = "Brazilian financial market data sources"
 readme = "README.md"
 authors = [
@@ -18,6 +18,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
     "pytest-mock>=3.15.1",
 ]
 
@@ -29,4 +30,4 @@ build-backend = "hatchling.build"
 packages = ["src/brdata"] 
 
 [tool.pytest.ini_options]
-pythonpath = ["src"]
+pythonpath = ["src/brdata"]
