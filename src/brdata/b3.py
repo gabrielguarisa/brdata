@@ -1,11 +1,12 @@
-import requests
 import os
-import time
 import base64
 import json
-from tqdm import tqdm
+import time
 from enum import StrEnum
 from typing import Any, TypeAlias
+
+import requests
+from tqdm import tqdm
 
 B3Payload: TypeAlias = dict[str, Any]
 B3IndexesPayload: TypeAlias = dict[str, B3Payload]
@@ -48,9 +49,9 @@ VALID_INDEXES: set[str] = {index.value for index in B3Index}
 def params_to_base64(params: str) -> str:
     """Converts search parameters to base64"""
     original_bytes = params.encode("utf-8")
-    enconded_bytes_base64 = base64.b64encode(original_bytes)
-    string_base64 = enconded_bytes_base64.decode("ascii")
-    return string_base64
+    encoded_bytes = base64.b64encode(original_bytes)
+    encoded_params = encoded_bytes.decode("ascii")
+    return encoded_params
 
 
 def download_index(
@@ -63,7 +64,7 @@ def download_index(
     if path:
         os.makedirs(path, exist_ok=True)
 
-    every_data: list[dict[str, Any]] = []
+    all_results: list[dict[str, Any]] = []
     current_page = 1
     header: dict[str, Any] | None = None
     full_path: str | None = None
@@ -73,19 +74,19 @@ def download_index(
     }
 
     while True:
-        base = {
+        request_params = {
             "language": "pt-br",
             "pageNumber": current_page,
             "pageSize": 100,
             "index": f"{index}",
             "segment": "1",
         }
-        base_json = json.dumps(base)
-        string_base64 = params_to_base64(base_json)
-        link = f"https://sistemaswebb3-listados.b3.com.br/indexProxy/indexCall/GetPortfolioDay/{string_base64}"
+        request_params_json = json.dumps(request_params)
+        encoded_params = params_to_base64(request_params_json)
+        url = f"https://sistemaswebb3-listados.b3.com.br/indexProxy/indexCall/GetPortfolioDay/{encoded_params}"
 
         try:
-            response = requests.get(link, headers=headers)
+            response = requests.get(url, headers=headers)
             response.raise_for_status()
             data = response.json()
 
@@ -96,14 +97,14 @@ def download_index(
                 if path:
                     full_path = os.path.join(path, f"{index}_{index_date}.json")
                     if not overwrite and os.path.exists(full_path):
-                        with open(full_path, encoding="utf-8") as arquivo:
-                            return json.load(arquivo)
+                        with open(full_path, encoding="utf-8") as file:
+                            return json.load(file)
 
             results = data.get("results", [])
             if not results:
                 break
 
-            every_data.extend(results)
+            all_results.extend(results)
 
             total_pages = data.get("page", {}).get("totalPages", 0)
             if current_page >= total_pages:
@@ -112,17 +113,17 @@ def download_index(
             current_page += 1
             time.sleep(0.5)
 
-        except Exception as e:
-            raise Exception(f"Index Error {index}: {e}") from None
+        except Exception as error:
+            raise Exception(f"Index Error {index}: {error}") from None
 
-    if not header or not every_data:
+    if not header or not all_results:
         raise Exception(f"Data Not Found for {index}")
 
-    index_data = {"header": header, "results": every_data}
+    index_data = {"header": header, "results": all_results}
 
     if full_path:
-        with open(full_path, "w", encoding="utf-8") as arquivo:
-            json.dump(index_data, arquivo, indent=4, ensure_ascii=False)
+        with open(full_path, "w", encoding="utf-8") as file:
+            json.dump(index_data, file, indent=4, ensure_ascii=False)
 
     return index_data
 
@@ -133,12 +134,12 @@ def download_indexes(
     """Extracts JSON files from a list of B3 indices"""
     indexes_data: B3IndexesPayload = {}
 
-    for i in tqdm(index_list, desc="Download B3"):
+    for index in tqdm(index_list, desc="Download B3"):
         try:
-            indexes_data[str(i)] = download_index(
-                index=i, path=path, overwrite=overwrite
+            indexes_data[str(index)] = download_index(
+                index=index, path=path, overwrite=overwrite
             )
-        except Exception as e:
-            tqdm.write(str(e))
+        except Exception as error:
+            tqdm.write(str(error))
 
     return indexes_data
