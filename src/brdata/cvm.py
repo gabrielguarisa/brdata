@@ -14,7 +14,7 @@ DEFAULT_RULES = {
 }
 
 
-def crawler(url, year):
+def crawler(url, year: int = None):
     """Returns the zip files from the CVM page based on a filter"""
     try:
         r = requests.get(url)
@@ -23,9 +23,14 @@ def crawler(url, year):
 
         for link in soup.find_all("a", href=True):
             href = link["href"]
-            if href.endswith(".zip") and year in link.text:
-                return href
-
+            text = link.get_text()
+            if href.endswith(".zip"):
+                if year:
+                    if str(year) in text:
+                        return href
+                else:
+                    return href
+    
     except requests.exceptions.RequestException as e:
         print(f"Connection Error {url}: {e}")
     return None
@@ -91,3 +96,22 @@ def datasets_in_range(
             if not skip_exceptions:
                 raise e
             tqdm.write(str(e))
+
+def metadata_dataset(dataset_type: Literal["ITR", "DFP", "VLMO", "FRE", "FCA"]):
+    """Download metadate for CVM datasets"""
+    url = f"https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/{dataset_type}/META/"
+    zip = crawler(url)
+    if zip is None:
+        raise Exception("File Not Found!")
+
+    full_url = url + zip
+    path = "data/landing/cvm/metadata"
+    os.makedirs(path, exist_ok=True)
+    full_path = os.path.join(path, zip)
+
+    response = requests.get(full_url, stream=True)
+    response.raise_for_status()
+
+    with open(full_path, "wb") as f:
+        for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
