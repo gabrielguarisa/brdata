@@ -22,6 +22,11 @@ def test_b3_index_is_str_enum():
     assert b3.B3Index.IBOV == "IBOV"
 
 
+def test_download_index_raises_on_invalid_index():
+    with pytest.raises(ValueError, match="Index MOEDA_FAKE Not Found"):
+        b3.download_index("MOEDA_FAKE")
+
+
 # 2. Teste de Sucesso - Download Simples
 def test_download_index_sucess(mocker):
     # Mock do requests para retornar JSON da B3
@@ -87,7 +92,10 @@ def test_download_index_pagination_merging(mocker):
 # 4. Teste de Validação - Pular índices inválidos
 def test_download_indexes_skips_invalid(mocker):
     index_data = {"header": {"date": "10/01/2026"}, "results": []}
-    mock_singular = mocker.patch("brdata.b3.download_index", return_value=index_data)
+    mock_singular = mocker.patch(
+        "brdata.b3.download_index",
+        side_effect=[index_data, ValueError("Index MOEDA_FAKE Not Found")],
+    )
     # Mock do tqdm como MagicMock para suportar tqdm.write()
     mock_tqdm = mocker.patch("brdata.b3.tqdm")
     mock_tqdm.side_effect = lambda x, **kwargs: x
@@ -97,7 +105,7 @@ def test_download_indexes_skips_invalid(mocker):
 
     # Deve baixar apenas o IBOV
     assert result == {"IBOV": index_data}
-    assert mock_singular.call_count == 1
+    assert mock_singular.call_count == 2
     mock_tqdm.write.assert_called_once_with("Index MOEDA_FAKE Not Found")
 
 

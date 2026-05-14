@@ -5,6 +5,10 @@ import base64
 import json
 from tqdm import tqdm
 from enum import StrEnum
+from typing import Any, TypeAlias
+
+B3Payload: TypeAlias = dict[str, Any]
+B3IndexesPayload: TypeAlias = dict[str, B3Payload]
 
 
 class B3Index(StrEnum):
@@ -38,10 +42,10 @@ class B3Index(StrEnum):
     IVBX = "IVBX"
 
 
-VALID_INDEXES = {index.value for index in B3Index}
+VALID_INDEXES: set[str] = {index.value for index in B3Index}
 
 
-def params_to_base64(params):
+def params_to_base64(params: str) -> str:
     """Converts search parameters to base64"""
     original_bytes = params.encode("utf-8")
     enconded_bytes_base64 = base64.b64encode(original_bytes)
@@ -51,17 +55,20 @@ def params_to_base64(params):
 
 def download_index(
     index: B3Index | str, path: str | None = None, overwrite: bool = False
-):
+) -> B3Payload:
     """Extracts JSON files from B3 indexes"""
+    if index not in VALID_INDEXES:
+        raise ValueError(f"Index {index} Not Found")
+
     if path:
         os.makedirs(path, exist_ok=True)
 
-    every_data = []
+    every_data: list[dict[str, Any]] = []
     current_page = 1
-    header = None
-    full_path = None
+    header: dict[str, Any] | None = None
+    full_path: str | None = None
 
-    headers = {
+    headers: dict[str, str] = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     }
 
@@ -122,14 +129,11 @@ def download_index(
 
 def download_indexes(
     index_list: list[B3Index | str], path: str | None = None, overwrite: bool = False
-):
+) -> B3IndexesPayload:
     """Extracts JSON files from a list of B3 indices"""
-    indexes_data = {}
+    indexes_data: B3IndexesPayload = {}
 
     for i in tqdm(index_list, desc="Download B3"):
-        if i not in VALID_INDEXES:
-            tqdm.write(f"Index {i} Not Found")
-            continue
         try:
             indexes_data[str(i)] = download_index(
                 index=i, path=path, overwrite=overwrite
