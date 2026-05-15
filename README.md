@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/gabrielguarisa/brdata"><img src="logo.png" alt="brdata"></a>
+  <a href="https://github.com/gabrielguarisa/brdata"><img src="https://raw.githubusercontent.com/gabrielguarisa/brdata/main/logo.png" alt="brdata"></a>
 </p>
 <p align="center">
     <em>Fontes de dados do mercado financeiro brasileiro</em>
