@@ -1,6 +1,6 @@
-import os
 import base64
 import json
+import os
 import time
 from datetime import datetime
 from enum import StrEnum
@@ -210,4 +210,10 @@ def download_indexes(
     return indexes_data
 
 
-__all__ = ["B3Index", "list_indexes", "download_index", "download_indexes"]
+__all__ = [
+    "B3Index",
+    "list_indexes",
+    "params_to_base64",
+    "download_index",
+    "download_indexes",
+]
