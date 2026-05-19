@@ -1,9 +1,9 @@
 import requests
-import os
-import json
 from datetime import date
 from enum import Enum
 from typing import Any, Dict, Optional
+
+from .utils import write_to_disk
 
 class FocusEndpoint(Enum):
     MERCADO_MENSAIS = "ExpectativaMercadoMensais"
@@ -24,17 +24,7 @@ def list_endpoints() -> list[str]:
     """lists available boletim focus endpoints"""
     return [endpoint.value for endpoint in FocusEndpoint]
 
-def write_on_disc(data, endpoint, path):
-    """Writes Boletim Focus data to a JSON file on disk"""
-    filename = f"boletim_focus_{endpoint}_{date.today()}.json"
-    os.makedirs(path, exist_ok=True)
-    full_path = os.path.join(path, filename)
-    
-    with open(full_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
-    return full_path
-
-def boletim_focus(
+def fetch_boletim_focus(
         endpoint: FocusEndpoint,
         top: Optional[int] = 100,
         filter_expr: Optional[str] = None,
@@ -56,9 +46,15 @@ def boletim_focus(
         response.raise_for_status()
         data = response.json()
         if path:
-            os.makedirs(path, exist_ok=True)
-            write_on_disc(data, endpoint=endpoint.name, path=path)
+            filename = f"boletim_focus_{endpoint}_{date.today()}.json"
+            write_to_disk(data, filename, path)
         else:
             return data
     except requests.exceptions.RequestException as e:
         raise Exception(f"Failed to query the endpoint {endpoint.name}: {e}")
+
+__all__ = [
+    "FocusEndpoint",
+    "list_endpoints",
+    "fetch_boletim_focus"
+]
