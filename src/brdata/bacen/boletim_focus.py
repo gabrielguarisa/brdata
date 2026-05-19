@@ -1,6 +1,7 @@
 import requests
 import os
 import json
+from datetime import date
 from enum import Enum
 from typing import Any, Dict, Optional
 
@@ -19,8 +20,13 @@ class FocusEndpoint(Enum):
     TOP5_INFLACAO_24M = "ExpectativasMercadoTop5Inflacao24Meses"
     DATAS_REFERENCIA = "DatasReferencia"
 
+def list_endpoints() -> list[str]:
+    """lists available boletim focus endpoints"""
+    return [endpoint.value for endpoint in FocusEndpoint]
+
 def write_on_disc(data, endpoint, path):
-    filename = f"boletim_focus_{endpoint}.json"
+    """Writes Boletim Focus data to a JSON file on disk"""
+    filename = f"boletim_focus_{endpoint}_{date.today()}.json"
     os.makedirs(path, exist_ok=True)
     full_path = os.path.join(path, filename)
     
@@ -28,13 +34,15 @@ def write_on_disc(data, endpoint, path):
         json.dump(data, f, ensure_ascii=False, indent=4)
     return full_path
 
-def fetch_boletim_focus(
+def boletim_focus(
         endpoint: FocusEndpoint,
         top: Optional[int] = 100,
         filter_expr: Optional[str] = None,
         path: str = None
 ) -> Dict[str, Any]:
-    
+    """
+    Fetches 'Boletim Focus' data. It can be downloaded directly if a file path is provided.
+    """
     base_url = f"https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/{endpoint.value}"
 
     params: Dict[str, Any] = {"$format": "json"}
@@ -48,10 +56,9 @@ def fetch_boletim_focus(
         response.raise_for_status()
         data = response.json()
         if path:
-            write_on_disc(data, endpoint=endpoint.name, path="data/boletim_focus/")
+            os.makedirs(path, exist_ok=True)
+            write_on_disc(data, endpoint=endpoint.name, path=path)
         else:
             return data
     except requests.exceptions.RequestException as e:
         raise Exception(f"Failed to query the endpoint {endpoint.name}: {e}")
-
-fetch_boletim_focus(FocusEndpoint.MERCADO_ANUAIS, path="data/boletim_focus/")
