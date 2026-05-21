@@ -45,5 +45,5 @@ def fetch_selic(
         print(f"Error: {e}")
 
 __all__ = [
-    "fetch_meta"
+    "fetch_selic"
 ]

@@ -1,3 +1,3 @@
-from . import b3, cvm
+from . import b3, cvm, bacen
 
-__all__ = ["b3", "cvm"]
+__all__ = ["b3", "cvm", "bacen"]
