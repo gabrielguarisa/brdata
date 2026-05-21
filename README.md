@@ -26,6 +26,11 @@ import brdata
 	- `cvm.dataset(year, dataset_type)`: Baixa um dataset baseado no ano.
 	- `cvm.datasets_in_range(dataset_type, start_year, last_year)`: Baixa uma série de datasets dentro de um range de anos.
 
+- `brdata.bacen`: Extrai dados do bacen (Taxa Selic Meta e Diária, Boletim Focus).
+	- `bacen.selic.fetch_selic(category, start_date, end_date, path)`: Retorna os dados da selic meta ou diária, de acordo com o que é passado em `category`, ou salva o JSON quando `path` é informado.
+	- `bacen.boletim_focus.list_endpoints()`: Lista os endpoints disponíveis para o Boletim Focus.
+  - `bacen.boletim_focus.fetch_boletim_focus(endpoint, top, filter_expr, path)`: Retorna dados do boletim focus de acordo com o endpoint passado, ou salva o JSON quando `path` é informado. `top` corresponde ao limite de registros, `filter_expr` corresponde a expressões de filtro para obter dados especificos. 
+
 ## Colaboradores
 <table>
   <tr>
