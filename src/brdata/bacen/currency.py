@@ -15,6 +15,10 @@ class AvailableCurrencies(Enum):
     JPY = "JPY"
     GBP = "GBP"
 
+def list_available_currencies():
+    """lists available currencies"""
+    return [currency.value for currency in AvailableCurrencies]
+
 def currency_price(
         currency: AvailableCurrencies | str,
         price_date: str = None,
