@@ -31,7 +31,7 @@ def currency_price(
     try:
         if price_date:
             datetime.strptime(price_date, "%m-%d-%Y")
-        elif end_price_date:
+        if end_price_date:
             datetime.strptime(end_price_date, "%m-%d-%Y")
     except ValueError:
         raise ValueError(
