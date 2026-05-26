@@ -28,19 +28,19 @@ def currency_price(
 ):  
     """
     Returns the daily bulletins with the Bid Parity and Ask Parity, the Bid Quote and Ask Quote for the date or period of the queried currency. It can be downloaded directly if a path is provided.
-    \nData Format: MM-DD-YYYY
+    \nData Format: YYYY-MM-DD
     """
     currency_code = currency.value.upper() if isinstance(currency, AvailableCurrencies) else str(currency).upper()
     
     try:
         if price_date:
-            datetime.strptime(price_date, "%m-%d-%Y")
+            price_date = datetime.strptime(price_date, "%Y-%m-%d").strftime("%m-%d-%Y")
         if end_price_date:
-            datetime.strptime(end_price_date, "%m-%d-%Y")
+            end_price_date = datetime.strptime(end_price_date, "%Y-%m-%d").strftime("%m-%d-%Y")
     except ValueError:
         raise ValueError(
             "The date is in an invalid format. "
-            "The correct format must be MM-DD-YYYY (e.g., 12-25-2025)"
+            "The correct format must be YYYY-MM-DD (e.g., 2025-12-25)"
         )
 
 

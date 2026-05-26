@@ -7,12 +7,12 @@ from src.brdata.bacen.currency import currency_price
 
 def test_currency_price_invalid_date_format():
     with pytest.raises(ValueError, match="The date is in an invalid format"):
-        currency_price(currency="USD", price_date="2025-12-25")
+        currency_price(currency="USD", price_date="12-25-2025")
 
 
 def test_currency_price_invalid_end_date_format():
     with pytest.raises(ValueError, match="The date is in an invalid format"):
-        currency_price(currency="USD", price_date="12-25-2025", end_price_date="25/12/2025")
+        currency_price(currency="USD", price_date="2025-12-25", end_price_date="25/12/2025")
 
 
 def test_currency_price_single_day_success(mocker):
@@ -23,7 +23,7 @@ def test_currency_price_single_day_success(mocker):
     mock_res.raise_for_status.return_value = None
     mock_get.return_value = mock_res
 
-    result = currency_price(currency="USD", price_date="12-25-2025")
+    result = currency_price(currency="USD", price_date="2025-12-25")
     
     assert result == {"value": [{"cotacaoCompra": 5.20}]}
     mock_get.assert_called_once_with(
@@ -39,7 +39,7 @@ def test_currency_price_period_success(mocker):
     mock_res.raise_for_status.return_value = None
     mock_get.return_value = mock_res
 
-    result = currency_price(currency="EUR", price_date="12-20-2025", end_price_date="12-25-2025")
+    result = currency_price(currency="EUR", price_date="2025-12-20", end_price_date="2025-12-25")
     
     assert result == {"value": [{"cotacaoCompra": 5.50}]}
     mock_get.assert_called_once_with(
@@ -71,9 +71,10 @@ def test_currency_price_saves_to_path(mocker):
     mock_res.raise_for_status.return_value = None
     mock_get.return_value = mock_res
 
-    result = currency_price(currency="USD", price_date="12-25-2025", path="/path/to/save")
+    result = currency_price(currency="USD", price_date="2025-12-25", path="/path/to/save")
 
     assert result is None
+    # Corrigido para esperar o nome do arquivo final com a data formatada em MM-DD-YYYY
     mock_write.assert_called_once_with({"moeda": "USD"}, "USD_12-25-2025.json", "/path/to/save")
 
 
@@ -84,7 +85,7 @@ def test_currency_price_http_error(mocker, capsys):
     mock_res.raise_for_status.side_effect = requests.exceptions.HTTPError("Erro interno simulado")
     mock_get.return_value = mock_res
 
-    currency_price(currency="USD", price_date="12-25-2025")
+    currency_price(currency="USD", price_date="2025-12-25")
     
     captured = capsys.readouterr()
     assert "Error:" in captured.out
