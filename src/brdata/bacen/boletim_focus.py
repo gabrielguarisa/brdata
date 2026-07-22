@@ -1,7 +1,7 @@
 import requests
 from urllib.parse import quote, urlencode
 
-from .utils import write_to_disk
+from .utils import write_to_disk, date_validator
 
 class BoletimFocus:
     """
@@ -29,9 +29,11 @@ class BoletimFocus:
         if indicador: 
             filter.append(f"Indicador eq '{indicador}'")
         if start_date:
-            filter.append(f"Data ge '{start_date}'")
+            valid_start_date = date_validator(start_date)
+            filter.append(f"Data ge '{valid_start_date}'")
         if end_date:
-            filter.append(f"Data le '{end_date}'")
+            valid_end_date = date_validator(end_date)
+            filter.append(f"Data le '{valid_end_date}'")
         
         params = {"$top": top, "$format": "json"}
 
