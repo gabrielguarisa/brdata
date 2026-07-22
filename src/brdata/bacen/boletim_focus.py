@@ -21,7 +21,6 @@ class BoletimFocus:
             end_date: str = None,
             top: int = 100,
             path: str = None,
-            **kwargs,
     ):
         url = f"{self.base_url}/{endpoint}"
 
@@ -43,7 +42,7 @@ class BoletimFocus:
         params_encoded = urlencode(params, quote_via=quote, safe="()'")
         url_completa = f"{url}?{params_encoded}"
 
-        response = requests.get(url_completa, **kwargs)
+        response = requests.get(url_completa)
         response.raise_for_status()
 
         data = response.json().get("value", [])
@@ -56,57 +55,148 @@ class BoletimFocus:
 
     # --- ENDPOINTS ---
 
-    def expectativas_mensais(self, **kwargs):
+    def expectativas_mensais(
+            self, 
+            indicador: str = None, 
+            start_date: str = None, 
+            end_date: str = None, 
+            top: int = 100, 
+            path: str = None
+            ):
         """Endpoint: ExpectativaMercadoMensais"""
-        return self._get("ExpectativaMercadoMensais", **kwargs)
+        return self._get("ExpectativaMercadoMensais", indicador, start_date, end_date, top, path)
     
-    def expectativas_selic(self, **kwargs):
+    def expectativas_selic(
+            self, 
+            indicador: str = None, 
+            start_date: str = None, 
+            end_date: str = None, 
+            top: int = 100, 
+            path: str = None
+            ):
         """Endpoint: ExpectativasMercadoSelic"""
-        return self._get("ExpectativasMercadoSelic", **kwargs)
+        return self._get("ExpectativasMercadoSelic", indicador, start_date, end_date, top, path)
     
-    def expectativas_trimestrais(self, **kwargs):
+    def expectativas_trimestrais(
+            self, 
+            indicador: str = None, 
+            start_date: str = None, 
+            end_date: str = None, 
+            top: int = 100, 
+            path: str = None
+            ):
         """Endpoint: ExpectativasMercadoTrimestrais"""
-        return self._get("ExpectativasMercadoTrimestrais", **kwargs)
+        return self._get("ExpectativasMercadoTrimestrais", indicador, start_date, end_date, top, path)
     
-    def expectativas_anuais(self, **kwargs):
+    def expectativas_anuais(
+            self, 
+            indicador: str = None, 
+            start_date: str = None, 
+            end_date: str = None, 
+            top: int = 100, 
+            path: str = None
+            ):
         """Endpoint: ExpectativasMercadoAnuais"""
-        return self._get("ExpectativasMercadoAnuais", **kwargs)
+        return self._get("ExpectativasMercadoAnuais", indicador, start_date, end_date, top, path)
     
-    def inflacao_12meses(self, **kwargs):
+    def inflacao_12meses(
+            self, 
+            indicador: str = None, 
+            start_date: str = None, 
+            end_date: str = None, 
+            top: int = 100, 
+            path: str = None
+            ):
         """Endpoint: ExpectativasMercadoInflacao12Meses"""
-        return self._get("ExpectativasMercadoInflacao12Meses", **kwargs)
+        return self._get("ExpectativasMercadoInflacao12Meses", indicador, start_date, end_date, top, path)
     
-    def inflacao_24meses(self, **kwargs):
+    def inflacao_24meses(
+            self, 
+            indicador: str = None, 
+            start_date: str = None, 
+            end_date: str = None, 
+            top: int = 100, 
+            path: str = None
+            ):
         """Endpoint: ExpectativasMercadoInflacao24Meses"""
-        return self._get("ExpectativasMercadoInflacao24Meses", **kwargs)
+        return self._get("ExpectativasMercadoInflacao24Meses", indicador, start_date, end_date, top, path)
     
-    def top5_mensais(self, **kwargs):
+    def top5_mensais(
+            self, 
+            indicador: str = None, 
+            start_date: str = None, 
+            end_date: str = None, 
+            top: int = 100, 
+            path: str = None
+            ):
         """Endpoint: ExpectativasMercadoTop5Mensais"""
-        return self._get("ExpectativasMercadoTop5Mensais", **kwargs)
+        return self._get("ExpectativasMercadoTop5Mensais", indicador, start_date, end_date, top, path)
     
-    def top5_selic(self, **kwargs):
+    def top5_selic(
+            self, 
+            indicador: str = None, 
+            start_date: str = None, 
+            end_date: str = None, 
+            top: int = 100, 
+            path: str = None
+            ):
         """Endpoint: ExpectativasMercadoTop5Selic"""
-        return self._get("ExpectativasMercadoTop5Selic", **kwargs)
+        return self._get("ExpectativasMercadoTop5Selic", indicador, start_date, end_date, top, path)
     
-    def top5_trimestral(self, **kwargs):
+    def top5_trimestral(
+            self, 
+            indicador: str = None, 
+            start_date: str = None, 
+            end_date: str = None, 
+            top: int = 100, 
+            path: str = None
+            ):
         """Endpoint: ExpectativaMercadoTop5Trimestral"""
-        return self._get("ExpectativaMercadoTop5Trimestral", **kwargs)
+        return self._get("ExpectativaMercadoTop5Trimestral", indicador, start_date, end_date, top, path)
     
-    def top5_anuais(self, **kwargs):
+    def top5_anuais(
+            self, 
+            indicador: str = None, 
+            start_date: str = None, 
+            end_date: str = None, 
+            top: int = 100, 
+            path: str = None
+            ):
         """Endpoint: ExpectativasMercadoTop5Anuais"""
-        return self._get("ExpectativasMercadoTop5Anuais", **kwargs)
+        return self._get("ExpectativasMercadoTop5Anuais", indicador, start_date, end_date, top, path)
     
-    def top5_inflacao_12meses(self, **kwargs):
+    def top5_inflacao_12meses(
+            self, 
+            indicador: str = None, 
+            start_date: str = None, 
+            end_date: str = None, 
+            top: int = 100, 
+            path: str = None
+            ):
         """Endpoint: ExpectativasMercadoTop5Inflacao12Meses"""
-        return self._get("ExpectativasMercadoTop5Inflacao12Meses", **kwargs)
+        return self._get("ExpectativasMercadoTop5Inflacao12Meses", indicador, start_date, end_date, top, path)
     
-    def top5_inflacao_24meses(self, **kwargs):
+    def top5_inflacao_24meses(
+            self, 
+            indicador: str = None, 
+            start_date: str = None, 
+            end_date: str = None, 
+            top: int = 100, 
+            path: str = None
+            ):
         """Endpoint: ExpectativasMercadoTop5Inflacao24Meses"""
-        return self._get("ExpectativasMercadoTop5Inflacao24Meses", **kwargs)
+        return self._get("ExpectativasMercadoTop5Inflacao24Meses", indicador, start_date, end_date, top, path)
     
-    def datas_referencia(self, **kwargs):
+    def datas_referencia(
+            self, 
+            indicador: str = None, 
+            start_date: str = None, 
+            end_date: str = None, 
+            top: int = 100, 
+            path: str = None
+            ):
         """Endpoint: DatasReferencia"""
-        return self._get("DatasReferencia", **kwargs)
+        return self._get("DatasReferencia", indicador, start_date, end_date, top, path)
     
 __all__ = [
     "BoletimFocus"

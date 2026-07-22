@@ -25,6 +25,6 @@ def date_validator(date: str):
         )
 
 __all__ = [
-    "write_to_disk"
+    "write_to_disk",
     "date_validator"
 ]
