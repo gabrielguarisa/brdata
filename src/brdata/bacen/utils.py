@@ -1,6 +1,6 @@
 import os
 import json
-
+from datetime import datetime
 
 def write_to_disk(data, filename, path):
     """Writes data to a JSON file on disk"""
@@ -12,6 +12,19 @@ def write_to_disk(data, filename, path):
 
     return full_path
 
+def date_validator(date: str):
+    if date is None:
+        return None
+    
+    try:
+        datetime.strptime(date, "%Y-%m-%d")
+        return date
+    except ValueError:
+        raise ValueError(
+            f"Invalid date format: '{date}'. Use the format 'YYYY-MM-DD' (example: '2024-01-01')."
+        )
+
 __all__ = [
-    "write_to_disk"
+    "write_to_disk",
+    "date_validator"
 ]
