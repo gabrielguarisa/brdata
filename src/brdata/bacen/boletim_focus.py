@@ -47,6 +47,8 @@ class BoletimFocus:
 
         data = response.json().get("value", [])
         filename = f"{endpoint}.json"
+        if start_date:
+            filename = f"{endpoint}_{start_date}.json"
 
         if path:
             write_to_disk(data, filename, path)
