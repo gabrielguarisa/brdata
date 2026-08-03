@@ -1,36 +1,41 @@
-import pytest
-from unittest.mock import patch, MagicMock
 from datetime import date
+from unittest.mock import MagicMock, patch
+import pytest
 import requests
 
 from src.brdata.bacen.selic import fetch_selic
 
+
 @patch("src.brdata.bacen.selic.requests.get")
 def test_fetch_selic_meta_sucesso(mock_get):
-    """testa a busca de selic meta com sucesso, sem salvar em arquivo"""
+    """Testa a busca de Selic Meta com sucesso no formato ISO, sem salvar em arquivo."""
     mock_response = MagicMock()
     dados_falsos = [{"data": "20/05/2026", "valor": "10.50"}]
     mock_response.json.return_value = dados_falsos
     mock_response.raise_for_status.return_value = None
     mock_get.return_value = mock_response
 
-    resultado = fetch_selic(category="meta", start_date="01/05/2026")
+    # Entrada em ISO: YYYY-MM-DD
+    resultado = fetch_selic(category="meta", start_date="2026-05-01")
 
     assert resultado == dados_falsos
+    # A API deve receber formatado em DD/MM/YYYY
     mock_get.assert_called_once_with(
         "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados",
-        params={"formato": "json", "dataInicial": "01/05/2026"}
+        params={"formato": "json", "dataInicial": "01/05/2026"},
     )
+
 
 @patch("src.brdata.bacen.selic.requests.get")
 def test_fetch_selic_diaria_com_data_final(mock_get):
-    """Testa a busca de Selic Diária incluindo o parâmetro end_date."""
+    """Testa a busca de Selic Diária incluindo end_date no formato ISO."""
     mock_response = MagicMock()
     mock_response.json.return_value = []
     mock_get.return_value = mock_response
 
+    # Entradas em ISO
     fetch_selic(
-        category="diaria", start_date="01/01/2026", end_date="31/01/2026"
+        category="diaria", start_date="2026-01-01", end_date="2026-01-31"
     )
 
     mock_get.assert_called_once_with(
@@ -46,20 +51,21 @@ def test_fetch_selic_diaria_com_data_final(mock_get):
 @patch("src.brdata.bacen.selic.write_to_disk")
 @patch("src.brdata.bacen.selic.requests.get")
 def test_fetch_selic_salvando_no_disco(mock_get, mock_write):
-    """Testa se a função chama corretamente o write_to_disk quando passamos um path."""
+    """Testa se a função gera o nome de arquivo ISO limpo ao passar um path."""
     mock_response = MagicMock()
     dados_falsos = [{"data": "20/05/2026", "valor": "10.50"}]
     mock_response.json.return_value = dados_falsos
     mock_get.return_value = mock_response
 
     resultado = fetch_selic(
-        category="meta", start_date="20/05/2026", path="/downloads"
+        category="meta", start_date="2026-05-20", path="/downloads"
     )
 
     assert resultado is None
 
+    # O arquivo deve utilizar o sufixo YYYY-MM-DD
     mock_write.assert_called_once_with(
-        dados_falsos, "selic_meta_20-05-2026.json", "/downloads"
+        dados_falsos, "selic_meta_2026-05-20.json", "/downloads"
     )
 
 
@@ -70,9 +76,15 @@ def test_fetch_selic_erro_na_requisicao(mock_get, capsys):
         "Erro de Conexão"
     )
 
-    resultado = fetch_selic(category="meta", start_date="01/05/2026")
+    resultado = fetch_selic(category="meta", start_date="2026-05-01")
 
     assert resultado is None
 
     captured = capsys.readouterr()
     assert "Error: Erro de Conexão" in captured.out
+
+
+def test_fetch_selic_formato_data_invalido():
+    """Testa se a função levanta ValueError ao passar data fora do padrão ISO."""
+    with pytest.raises(ValueError):
+        fetch_selic(category="meta", start_date="01/05/2026")
