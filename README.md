@@ -28,6 +28,7 @@ import brdata
 
 - `brdata.bacen`: Extrai dados do bacen (Taxa Selic Meta e Diária, Boletim Focus).
 	- `bacen.selic.fetch_selic(category, start_date, end_date, path)`: Retorna os dados da selic meta ou diária, de acordo com o que é passado em `category`, ou salva o JSON quando `path` é informado.
+  - `bacen.copom.fetch_copom_table(path)`: retorna a tabela de histórico taxas de juros, ou salva o JSON quando `path` é informado.
   - `bacen.currency.currency_price(currency, price_data, end_price_date, top, path)`: Retorna os boletins diários com Paridade de venda, Cotação da compra e a Cotação da venda para a data ou período da moeda consultada, ou salva o JSON quando `path` é informado. `top` corresponde ao limite de registros.
   - `bacen.currency.list_available_currencies()`: Lista as moedas disponiveis para consulta.  
   - `bacen.boletim_focus`: Retorna dados do boletim focus de acordo com o endpoint passado, ou salva o JSON quando `path` é informado. Como usar:
