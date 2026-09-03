@@ -50,7 +50,7 @@ def fetch_copom_table(
         dados_json = df.to_dict(orient="records")
 
         timestamp = date.today()
-        filename = f"historico_copom_{timestamp}"
+        filename = f"historico_copom_{timestamp}.json"
 
         write_to_disk(dados_json, filename, path)
     else:
