@@ -17,20 +17,65 @@ import brdata
 ```
 
 ### O que *brdata* faz?
-- `brdata.b3`: Extrai índices da B3.
-	- `b3.list_indexes()`: Lista os índices da B3 disponíveis.
-	- `b3.download_index(valid_index, path=None, theoretical=True)`: Retorna os dados de um índice ou salva o JSON quando `path` é informado. Use `theoretical=False` para a carteira do dia.
-	- `b3.download_indexes(index_list: list[str], path=None, theoretical=True)`: Retorna os dados de uma lista de índices válidos ou salva os JSONs quando `path` é informado. Use `theoretical=False` para a carteira do dia.
 
-- `brdata.cvm`: Download de formulários da CVM `(DFP, ITR, FRE, FCA, VLMO)` .
-	- `cvm.dataset(year, dataset_type)`: Baixa um dataset baseado no ano.
-	- `cvm.datasets_in_range(dataset_type, start_year, last_year)`: Baixa uma série de datasets dentro de um range de anos.
+-  `brdata.b3`: Extrai índices da B3.
 
-- `brdata.bacen`: Extrai dados do bacen (Taxa Selic Meta e Diária, Boletim Focus).
-	- `bacen.selic.fetch_selic(category, start_date, end_date, path)`: Retorna os dados da selic meta ou diária, de acordo com o que é passado em `category`, ou salva o JSON quando `path` é informado.
-  - `bacen.copom.fetch_copom_table(path)`: retorna a tabela de histórico taxas de juros, ou salva o JSON quando `path` é informado.
-  - `bacen.currency.currency_price(currency, price_data, end_price_date, top, path)`: Retorna os boletins diários com Paridade de venda, Cotação da compra e a Cotação da venda para a data ou período da moeda consultada, ou salva o JSON quando `path` é informado. `top` corresponde ao limite de registros.
-  - `bacen.currency.list_available_currencies()`: Lista as moedas disponiveis para consulta.  
+	-  `b3.list_indexes()`: Lista os índices da B3 disponíveis.
+
+	-  `b3.download_index(valid_index, path=None, theoretical=True)`: Retorna os dados de um índice ou salva o JSON quando `path` é informado. Use `theoretical=False` para a carteira do dia.
+
+	-  `b3.download_indexes(index_list: list[str], path=None, theoretical=True)`: Retorna os dados de uma lista de índices válidos ou salva os JSONs quando `path` é informado. Use `theoretical=False` para a carteira do dia.
+
+  
+
+-  `brdata.cvm`: Download de formulários da CVM `(DFP, ITR, FRE, FCA, VLMO)` .
+
+	-  `cvm.dataset(year, dataset_type)`: Baixa um dataset baseado no ano.
+
+	-  `cvm.datasets_in_range(dataset_type, start_year, last_year)`: Baixa uma série de datasets dentro de um range de anos.
+
+  
+
+-  `brdata.bacen`: Extrai dados do bacen (Taxa Selic Meta e Diária, Boletim Focus, Calendário COPOM, IPCA, Moedas).
+
+-  `bacen.bcbclient`: Retorna dados da Taxa Selic, Calendário COPOM, IPCA e Moedas, ou salva em disco quando `path` é informado. Como usar:
+
+	```Python
+
+	from brdata.bacen.bcbclient import BCBClient
+	
+	client = BCBClient(default_save_path = "data/") 
+	
+	# Calendário Copom
+	client.get_copom_calendar()
+
+	# Moedas
+	client.get_currencies()
+	
+	# Selic Meta e Diaria
+	client.get_selic_meta()
+	client.get_selic_diaria()
+	
+	# IPCA
+	client.get_ipca()	
+	```
+
+	#### Sobre o BCBClient
+
+	-  `BCBClient(default_save_path)`: Instancia o client, pode ser definido uma `path`default para todos os métodos. Caso não seja definido deve ser passado individualmente ou todos serão retornados em memória.
+	
+	 -  `client.get_copom_calendar()`: retorna a tabela de histórico taxas de juros, ou salva o JSON quando `path` é informado.
+	
+	-  `client.get_currencies(currency, price_data, end_price_date, top, path)`: Retorna os boletins diários com Paridade de venda, Cotação da compra e a Cotação da venda para a data ou período da moeda consultada, ou salva o JSON quando `path` é informado. `top` corresponde ao limite de registros.
+	 
+	-  `client.get_selic_meta(start_date, end_date, path)`: Retorna os dados da selic meta, ou salva o JSON quando `path` é informado.
+
+	-  `client.get_selic_diaria(start_date, end_date, path)`: Retorna os dados da selic meta, ou salva o JSON quando `path` é informado.
+
+	-  `client.get_ipca(start_date, end_date, path)`: retorna o Índice nacional de preços ao consumidor-amplo (IPCA), ou salva o JSON quando `path` é informado.
+
+---
+
   - `bacen.boletim_focus`: Retorna dados do boletim focus de acordo com o endpoint passado, ou salva o JSON quando `path` é informado. Como usar:
     ```Python
     from brdata.bacen.boletim_focus import BoletimFocus
