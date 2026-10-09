@@ -3,7 +3,7 @@ from typing import Optional, Union
 from .copom import fetch_copom_table
 from .currency import AvailableCurrencies, currency_price
 from .selic import fetch_selic
-
+from .ipca import fetch_ipca
 
 class BCBClient:
     """
@@ -57,6 +57,19 @@ class BCBClient:
             target_path = path or self.default_save_path
             return fetch_selic(
                 category = "diaria",
+                start_date = start_date,
+                end_date = end_date,
+                path = target_path
+            )
+
+    def get_ipca(
+            self,
+            start_date: Optional[str] = None,
+            end_date: Optional[str] = None,
+            path: Optional[str] = None,
+        ):
+            target_path = path or self.default_save_path
+            return fetch_ipca(
                 start_date = start_date,
                 end_date = end_date,
                 path = target_path
